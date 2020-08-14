@@ -1,0 +1,14 @@
+{
+  "name": "menfout",
+  "routes": [
+    {
+      "name": "Aline la maline",
+      "level": "5a",
+      "points": 5,
+      "information": "ishouldbeanesayone"
+    }
+  ],
+  "metadata": {
+    "info": "go to the river"
+  }
+}
