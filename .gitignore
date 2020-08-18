@@ -3,3 +3,5 @@
 # Output of the go coverage tool
 *.out
 coverage.txt
+# Output of runs
+bin/*

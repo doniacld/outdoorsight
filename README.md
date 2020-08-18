@@ -4,20 +4,61 @@
 
 # Outdoorsight
 
-Add your favorite climbing spots ! 
+Add your favorite climbing spots and the routes you achieved !! 
 
 ## Packaging
 
-Build the image
+Build the docker image
 
-    docker build -t outdoorsight .
+    make docker_build
 
-Run the image
+Run the docker image
 
-    docker run -p 8080:8080 outdoorsight
+    make docker_run
 
+## API requests examples
+
+### Add Spot
+
+    curl -v -X POST http://127.0.0.1:8080/spots -d '{
+      "name": "luceram",
+      "routes": [
+        {
+          "name": "Aline la maline",
+          "level": "5a",
+          "points": 5,
+          "information": "ishouldbeanesayone"
+        }
+      ],
+      "metadata": {
+        "info": "go to the river"
+      }
+    }'
+
+### Get Spot
+
+    curl -v -X GET http://127.0.0.1:8080/spots/luceram
+
+### Delete Spot
+
+    curl -v -X DELETE http://127.0.0.1:8080/spots/luceram
+
+### Update Spot
+
+    curl -v -X POST http://127.0.0.1:8080/spots/luceram -d '{
+      "routes": [
+        {
+          "name": "Bibi et Fricotin",
+          "level": "5c",
+          "points": 6,
+        }
+      ],
+          "metadata": {
+            "exposition": "Sun appears at 12pm during the summerF"
+          }
+        }'
+    
 ## External resources
 
 ### Mongo related
-https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
 https://godoc.org/go.mongodb.org/mongo-driver/mongo

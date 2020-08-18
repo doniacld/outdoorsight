@@ -36,10 +36,14 @@ type Routes []Route
 var routes = Routes{
 	Route{
 		endpoints.GetSpotMeta,
-		endpoints.GetSpotDetails,
+		endpoints.GetSpot,
 	},
 	{
 		endpoints.AddSpotMeta,
 		endpoints.AddSpot,
+	},
+	{
+		endpoints.DeleteSpotMeta,
+		endpoints.DeleteSpot,
 	},
 }

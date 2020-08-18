@@ -13,8 +13,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// GetSpotDetails returns all the details on a given spot
-func GetSpotDetails(w http.ResponseWriter, r *http.Request) {
+// GetSpot returns all the details on a given spot
+func GetSpot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	spotName := vars[ParamSpotName]
 
