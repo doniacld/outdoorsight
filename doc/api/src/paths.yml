@@ -1,0 +1,43 @@
+swagger: '2.0'
+
+info:
+  version: 1.0.0
+  title: Outdoorsight API Doc
+  description: >
+    The Outdoorsight API Doc is a RESTful API.
+    The requests and responses are formatted according to JSON API specification.
+
+paths:
+  /spots:
+    get:
+      summary: List spots
+    tags:
+      - Spot
+    responses:
+      200:
+        description: A list of spots
+        schema:
+          $ref: 'definitions/spots.yml#/spot'
+      404:
+        $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+      500:
+        $ref: 'definitions/errors.yml#/standard500ErrorResponse'
+  /spots/<spotName>:
+      put:
+        summary: Create a spot
+        description: Adds a new spot to the database
+        tags:
+          - Spot
+        parameters:
+          - name: 'spotName'
+            in: 'path'
+        responses:
+          200:
+            description: A list of spots
+            schema:
+              $ref: 'definitions/spots.yml#/spot'
+          404:
+            $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+          500:
+            $ref: 'definitions/errors.yml#/standard500ErrorResponse'
+

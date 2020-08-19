@@ -35,6 +35,11 @@ type Routes []Route
 // routes contains all the available endpoints
 var routes = Routes{
 	Route{
+		endpoints.GetAPIDocMeta,
+		endpoints.GetAPIDoc,
+	},
+
+	{
 		endpoints.GetSpotMeta,
 		endpoints.GetSpot,
 	},

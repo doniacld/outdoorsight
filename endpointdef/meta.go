@@ -3,6 +3,7 @@ package endpointdef
 const (
 	ContentType  = "Content-Type"
 	MimeTypeJSON = "application/json"
+	MimeTypeHTML = "text/html"
 )
 
 // Meta hols endpoint metadata

@@ -33,3 +33,6 @@ docker_build:
 		docker build -t outdoorsight .
 docker_run:
 		docker run -p 8080:8080 --net=host outdoorsight
+
+doc:
+		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml

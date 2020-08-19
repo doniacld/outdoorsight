@@ -1,0 +1,8 @@
+spot:
+  description: A spot is a climbing outdoor place
+  type: object
+  properties:
+    name:
+      description: The spot's name
+      type: string
+      example: Luceram

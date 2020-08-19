@@ -1,0 +1,5 @@
+standard404ErrorResponse:
+  description: The path is unknown.
+
+standard500ErrorResponse:
+  description: Internal error happened.
