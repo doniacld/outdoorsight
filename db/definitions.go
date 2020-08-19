@@ -1,7 +1,7 @@
 package db
 
 // SpotDetails is the database structure that holds the information about a spot
-// We do not want to expose the database format to the world.
+// We do not want to expose the database format to the world, so we redefine it.
 type SpotDetails struct {
 	Name     string                 `bson:"name"`
 	Routes   []Route                `bson:"routes"`

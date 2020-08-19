@@ -13,7 +13,7 @@ type Meta interface {
 	SuccessCode() int
 }
 
-// New creates a new endpoint structure
+// NewClient creates a new endpoint structure
 func New(traceName, path, verb string, code int) Meta {
 	e := endpoint{
 		traceName,

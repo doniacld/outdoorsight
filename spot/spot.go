@@ -7,17 +7,17 @@ type Spot interface {
 
 // Details holds the information about a spot
 type Details struct {
-	Name     string                 `json:"name" bson:"name"`
-	Routes   []Route                `json:"routes" bson:"routes"`
-	Metadata map[string]interface{} `json:"metadata" bson:"metadata"`
+	Name     string                 `json:"name"`
+	Routes   []Route                `json:"routes"`
+	Metadata map[string]interface{} `json:"metadata"`
 }
 
 // Route holds the information about a route
 type Route struct {
-	Name        string `json:"name" bson:"name"`
-	Level       string `json:"level" bson:"level"`
-	Points      int    `json:"points" bson:"points"`
-	Information string `json:"information" bson:"information"`
+	Name        string `json:"name"`
+	Level       string `json:"level"`
+	Points      int    `json:"points"`
+	Information string `json:"information"`
 }
 
 // NewRoute returns a new structure filled with given parameters

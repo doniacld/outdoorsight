@@ -7,7 +7,7 @@ import (
 	"github.com/doniacld/outdoorsight/spot"
 )
 
-// AddSpotMeta hold the endpoint information
+// AddSpotMeta holds the endpoint information
 var AddSpotMeta = endpointdef.New(
 	"addSpot",
 	"/spots",

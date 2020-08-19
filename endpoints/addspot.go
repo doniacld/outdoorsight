@@ -3,6 +3,7 @@ package endpoints
 import (
 	"context"
 	"encoding/json"
+	"github.com/pkg/errors"
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/db"
@@ -19,14 +20,13 @@ func AddSpot(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// TODO DONIA db part should be done elsewhere
-	collection := db.ConnectDB()
-	_, err := collection.InsertOne(context.TODO(), spotDetailsDB)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	// call the database
+	osDB := db.New()
+	if err := osDB.AddSpot(context.TODO(), spotDetailsDB); err != nil {
+		panic(errors.Wrap(err, "unable to add spot"))
 	}
 
+	// set the response parameters
 	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
 	w.WriteHeader(AddSpotMeta.SuccessCode())
 }

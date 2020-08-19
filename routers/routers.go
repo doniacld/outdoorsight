@@ -46,4 +46,8 @@ var routes = Routes{
 		endpoints.DeleteSpotMeta,
 		endpoints.DeleteSpot,
 	},
+	{
+		endpoints.UpdateSpotMeta,
+		endpoints.UpdateSpot,
+	},
 }
