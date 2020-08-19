@@ -1,8 +1,8 @@
-package db
+package core
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"log"
 	"time"
 
@@ -10,9 +10,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type mongoDB struct {
+	client *mongo.Client
+}
+
+// Insert creates a new document in DB
+func (m *mongoDB) Insert(collection string, doc interface{}) error {
+	c := m.client.Database("outdoorsight").Collection(collection)
+	if err := c.Insert(doc); err != nil {
+		return errors.New(err)
+	}
+	return nil
+}
+
 // ConnectDB : This is helper function to connect mongoDB
 // If you want to export your function. You must to start upper case function name. Otherwise you won't see your function when you import that on other class.
-func ConnectDB() *mongo.Collection {
+func ConnectDB() *mongo.Client {
 	// set client options
 	clientOptions := options.Client().ApplyURI("mongodb://127.0.0.1:27017")
 	// connect to MongoDB
@@ -23,9 +36,5 @@ func ConnectDB() *mongo.Collection {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Connected to MongoDB!")
-
-	collection := client.Database("outdoorsight").Collection("spots")
-
-	return collection
+	return client
 }

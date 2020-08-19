@@ -11,12 +11,12 @@ import (
 var AddSpotMeta = endpointdef.New(
 	"addSpot",
 	"/spots",
-	http.MethodPost,
+	http.MethodPut,
 	http.StatusCreated,
 )
 
 // AddSpotRequest is the request structure
-var AddSpotRequest spot.SpotDetails
+var AddSpotRequest spot.Details
 
 // AddSpotResponse holds the response structure
 var AddSpotResponse struct{}

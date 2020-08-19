@@ -20,7 +20,7 @@ Run the docker image
 
 ### Add Spot
 
-    curl -v -X POST http://127.0.0.1:8080/spots -d '{
+    curl -v -X PUT http://127.0.0.1:8080/spots -d '{
       "name": "luceram",
       "routes": [
         {

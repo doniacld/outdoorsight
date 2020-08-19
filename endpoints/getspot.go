@@ -34,7 +34,7 @@ func GetSpot(w http.ResponseWriter, r *http.Request) {
 
 	// convert the result which is a cursor in a spotDetails structure
 	for cursor.Next(context.Background()) {
-		var spotDetails spot.SpotDetails
+		var spotDetails spot.Details
 		err := cursor.Decode(&spotDetails)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

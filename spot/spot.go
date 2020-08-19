@@ -5,8 +5,8 @@ type Spot interface {
 	GetRoutes() []Route
 }
 
-// SpotDetails holds the information about a spot
-type SpotDetails struct {
+// Details holds the information about a spot
+type Details struct {
 	Name     string                 `json:"name" bson:"name"`
 	Routes   []Route                `json:"routes" bson:"routes"`
 	Metadata map[string]interface{} `json:"metadata" bson:"metadata"`

@@ -25,4 +25,4 @@ var GetSpotRequest struct {
 }
 
 // GetSpotResponse holds the response structure
-var GetSpotResponse spot.SpotDetails
+var GetSpotResponse spot.Details

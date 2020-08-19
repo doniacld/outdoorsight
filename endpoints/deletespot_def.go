@@ -21,4 +21,4 @@ var DeleteSpotRequest struct {
 }
 
 // DeleteSpotResponse holds the response structure
-var DeleteSpotResponse spot.SpotDetails
+var DeleteSpotResponse spot.Details
