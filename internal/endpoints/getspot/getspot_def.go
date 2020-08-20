@@ -1,20 +1,17 @@
-package endpoints
+package getspot
 
 import (
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/endpointdef"
-	"github.com/doniacld/outdoorsight/spot"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/endpoints"
+	"github.com/doniacld/outdoorsight/internal/spot"
 )
 
-const (
-	ParamSpotName = "spotName"
-)
-
-// GetSpotMeta hold the endpoint information
+// GetSpotMeta holds the endpoint information
 var GetSpotMeta = endpointdef.New(
 	"getSpotDetails",
-	"/spots/{"+ParamSpotName+"}",
+	"/spots/{"+endpoints.ParamSpotName+"}",
 	http.MethodGet,
 	http.StatusOK,
 )

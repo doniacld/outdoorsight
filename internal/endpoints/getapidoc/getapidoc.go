@@ -1,10 +1,10 @@
-package endpoints
+package getapidoc
 
 import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
 
 	"github.com/pkg/errors"
 )

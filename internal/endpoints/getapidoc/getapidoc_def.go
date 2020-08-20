@@ -1,9 +1,9 @@
-package endpoints
+package getapidoc
 
 import (
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
 )
 
 // GetAPIDocMeta holds the endpoint information

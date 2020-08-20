@@ -12,7 +12,4 @@ type DB interface {
 	Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, error)
 	Delete(ctx context.Context, collection string, filter map[string]interface{}) error
 	Update(ctx context.Context, collection string, filter map[string]interface{}, update interface{}) error
-
-	// Mongo connexion
-	NewClient() *mongo.Client
 }

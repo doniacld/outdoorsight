@@ -1,17 +1,17 @@
-package endpoints
+package addspot
 
 import (
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/endpointdef"
-	"github.com/doniacld/outdoorsight/spot"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/spot"
 )
 
 // AddSpotMeta holds the endpoint information
 var AddSpotMeta = endpointdef.New(
 	"addSpot",
 	"/spots",
-	http.MethodPut,
+	http.MethodPost,
 	http.StatusCreated,
 )
 

@@ -4,9 +4,18 @@
 
 # Outdoorsight
 
-Add your favorite climbing spots and the routes you achieved !! 
+Outdoorsight is a web service dedicated to rock climbers.  
+You cann add your favorite climbing spots, and their routes that you achieved or the next ones! 
 
-## Packaging
+It is a CRUD and RESTful API, communicating through http.
+
+## Setup
+
+#### Prerequisites
+
+- Install docker
+
+## Install
 
 Build the docker image
 
@@ -16,49 +25,17 @@ Run the docker image
 
     make docker_run
 
-## API requests examples
+## Available Functionalities
 
-### Add Spot
+| Endpoint    | Description                                       |
+|-------------|---------------------------------------------------|
+| AddSpot     | Add a spot to your list of spot                   |
+| GetSpot     | Retrieve the given spot with its details          |
+| UpdateSpot  | Update the given spot with the furnished details  |
+| DeleteSpot  | Delete a spot from your list of spots             |
 
-    curl -v -X PUT http://127.0.0.1:8080/spots -d '{
-      "name": "luceram",
-      "routes": [
-        {
-          "name": "Aline la maline",
-          "level": "5a",
-          "points": 5,
-          "information": "ishouldbeanesayone"
-        }
-      ],
-      "metadata": {
-        "info": "go to the river"
-      }
-    }'
-
-### Get Spot
-
-    curl -v -X GET http://127.0.0.1:8080/spots/luceram
-
-### Delete Spot
-
-    curl -v -X DELETE http://127.0.0.1:8080/spots/luceram
-
-### Update Spot
-
-    curl -v -X POST http://127.0.0.1:8080/spots/luceram -d '{
-      "routes": [
-        {
-          "name": "Bibi et Fricotin",
-          "level": "5c",
-          "points": 6,
-        }
-      ],
-          "metadata": {
-            "exposition": "Sun appears at 12pm during the summerF"
-          }
-        }'
     
-## External resources
+## External resources that were useful
 
-### Mongo related
-https://godoc.org/go.mongodb.org/mongo-driver/mongo
+- [Mongo driver documentation](https://godoc.org/go.mongodb.org/mongo-driver/mongo)
+

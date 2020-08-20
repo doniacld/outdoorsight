@@ -1,4 +1,4 @@
-package endpoints
+package addspot
 
 import (
 	"context"
@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/db"
-	"github.com/doniacld/outdoorsight/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/db"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
 )
 
 // AddSpot adds a spot to your list

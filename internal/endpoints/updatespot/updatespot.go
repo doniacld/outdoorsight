@@ -1,4 +1,4 @@
-package endpoints
+package updatespot
 
 import (
 	"context"
@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/db"
+	"github.com/doniacld/outdoorsight/internal/db"
+	"github.com/doniacld/outdoorsight/internal/endpoints"
+
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 )
@@ -14,7 +16,7 @@ import (
 // UpdateSpot returns all the details on a given spot
 func UpdateSpot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	spotName := vars[ParamSpotName]
+	spotName := vars[endpoints.ParamSpotName]
 
 	// decode the body into spotDetails structure
 	var spotDetailsDB db.SpotDetails

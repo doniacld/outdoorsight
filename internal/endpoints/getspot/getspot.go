@@ -1,4 +1,4 @@
-package endpoints
+package getspot
 
 import (
 	"context"
@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/db"
-	"github.com/doniacld/outdoorsight/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/db"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/endpoints"
 
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
@@ -16,7 +17,7 @@ import (
 // GetSpot returns all the details on a given spot
 func GetSpot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	spotName := vars[ParamSpotName]
+	spotName := vars[endpoints.ParamSpotName]
 
 	// call the database
 	osDB := db.New()

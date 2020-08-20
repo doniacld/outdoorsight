@@ -1,16 +1,17 @@
-package endpoints
+package deletespot
 
 import (
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/endpointdef"
-	"github.com/doniacld/outdoorsight/spot"
+	"github.com/doniacld/outdoorsight/internal/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/endpoints"
+	"github.com/doniacld/outdoorsight/internal/spot"
 )
 
-// DeleteSpotMeta hold the endpoint information
+// DeleteSpotMeta holds the endpoint information
 var DeleteSpotMeta = endpointdef.New(
 	"DeleteSpotDetails",
-	"/spots/{"+ParamSpotName+"}",
+	"/spots/{"+endpoints.ParamSpotName+"}",
 	http.MethodDelete,
 	http.StatusNoContent,
 )

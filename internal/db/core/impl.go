@@ -15,18 +15,18 @@ const (
 	outdoorsightDB = "outdoorsight"
 )
 
-type MongoDB struct {
+type mongoDB struct {
 	Client *mongo.Client
 }
 
-// NewMongoDB creates a new instance of MongoDB structure
-func NewMongoDB() MongoDB {
-	m := MongoDB{}
-	return MongoDB{Client: m.NewClient()}
+// NewDB creates a new instance of mongoDB structure
+func NewDB() DB {
+	m := mongoDB{}
+	return &mongoDB{Client: m.NewClient()}
 }
 
 // Insert creates a new document in DB
-func (m *MongoDB) Insert(ctx context.Context, collection string, doc interface{}) error {
+func (m *mongoDB) Insert(ctx context.Context, collection string, doc interface{}) error {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
 	if _, err := c.InsertOne(ctx, doc); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to insert document in collection %s", collection))
@@ -35,7 +35,7 @@ func (m *MongoDB) Insert(ctx context.Context, collection string, doc interface{}
 }
 
 // Find retrieves the cursor corresponding to the given filter
-func (m *MongoDB) Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, error) {
+func (m *mongoDB) Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, error) {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
 	cursor, err := c.Find(ctx, filter)
 	if err != nil {
@@ -46,7 +46,7 @@ func (m *MongoDB) Find(ctx context.Context, collection string, filter map[string
 }
 
 // Delete deletes a document
-func (m *MongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) error {
+func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) error {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
 	if _, err := c.DeleteOne(ctx, filter); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to delete document in collection %s", collection))
@@ -55,7 +55,7 @@ func (m *MongoDB) Delete(ctx context.Context, collection string, filter map[stri
 }
 
 // Update updates an existing document
-func (m *MongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update interface{}) error {
+func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update interface{}) error {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
 	res, err := c.UpdateOne(ctx, filter, update)
 	if res.MatchedCount != 1 {
@@ -68,10 +68,10 @@ func (m *MongoDB) Update(ctx context.Context, collection string, filter map[stri
 }
 
 // NewClient creates the connexion to the database and returns a mongo client
-func (m *MongoDB) NewClient() *mongo.Client {
+func (m *mongoDB) NewClient() *mongo.Client {
 	// set client options
 	clientOptions := options.Client().ApplyURI("mongodb://127.0.0.1:27017")
-	// connect to MongoDB
+	// connect to mongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	client, err := mongo.Connect(ctx, clientOptions)
