@@ -38,8 +38,8 @@ docker_build:
 docker_run:
 		$(DOKRRUN) -p 8080:8080 --net=host outdoorsight
 docker_run_mongo:
-		cd
-		$(DOKRRUN) -p 8080:8080 --net=host outdoorsight
+		cd misc/mongo
+		$(DOKRRUN) -p 8080:8080 --net=host mongo
 doc:
 		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml
 help:
