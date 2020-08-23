@@ -13,7 +13,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// UpdateSpot returns all the details on a given spot
+// UpdateSpot returns all the details about a given spot
 func UpdateSpot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	spotName := vars[endpoints.ParamSpotName]
@@ -27,11 +27,24 @@ func UpdateSpot(w http.ResponseWriter, r *http.Request) {
 
 	// call the database
 	osDB := db.New()
-	err := osDB.UpdateSpot(context.TODO(), spotName, spotDetailsDB)
-	if err != nil {
+	if err := osDB.UpdateSpot(context.TODO(), spotName, spotDetailsDB); err != nil {
 		panic(errors.Wrap(err, fmt.Sprintf("unable to update spot %s", spotName)))
+	}
+
+	// get the updated spot
+	if spotName != spotDetailsDB.Name {
+		spotName = spotDetailsDB.Name
+	}
+	res, err := osDB.GetSpot(context.TODO(), spotName)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	// set the response parameters
 	w.WriteHeader(UpdateSpotMeta.SuccessCode())
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }

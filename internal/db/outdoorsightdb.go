@@ -13,7 +13,7 @@ type DB interface {
 	AddSpot(ctx context.Context, details SpotDetails) error
 	GetSpot(ctx context.Context, spotName string) (spot.Details, error)
 	DeleteSpot(ctx context.Context, spotName string) error
-	UpdateSpot(ctx context.Context, spotName string, details SpotDetails) error
+	UpdateSpot(ctx context.Context, spotName string, update SpotDetails) error
 }
 
 // OutdoorsightDB is the structure holding the core DB

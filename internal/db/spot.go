@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/doniacld/outdoorsight/internal/spot"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/pkg/errors"
@@ -28,14 +29,17 @@ func (os *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (spot.De
 	if err != nil {
 		return spot.Details{}, errors.Wrap(err, fmt.Sprintf("unable to get spot %s", spotName))
 	}
+
 	// convert the result which is a cursor in a spot.Details structure
 	var spotDetails spot.Details
-	res, err := decodeCursor(ctx, cursor, &spotDetails)
-	if err != nil {
-		return spot.Details{}, errors.Wrap(err, fmt.Sprintf("unable to decode spot %s from DB", spotName))
+	for cursor.Next(ctx) {
+		err := cursor.Decode(&spotDetails)
+		if err != nil {
+			return spot.Details{}, errors.Wrap(err, "unable to decode cursor")
+		}
 	}
 
-	return res.(spot.Details), nil
+	return spotDetails, nil
 }
 
 // DeleteSpot deletes a spot from database
@@ -47,9 +51,10 @@ func (os *OutdoorsightDB) DeleteSpot(ctx context.Context, spotName string) error
 }
 
 // UpdateSpot updates a spot in database
-func (os *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, details SpotDetails) error {
-	if err := os.Update(ctx, spotsCollection, spotNameFilter(spotName), details); err != nil {
-		return errors.Wrap(err, fmt.Sprintf("unable to update spot %s in DB", details.Name))
+func (os *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd SpotDetails) error {
+	update := bson.D{{"$set", sd}}
+	if err := os.Update(ctx, spotsCollection, spotNameFilter(spotName), update); err != nil {
+		return errors.Wrap(err, fmt.Sprintf("unable to update spot %s in DB", spotName))
 	}
 	return nil
 }

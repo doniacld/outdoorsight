@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"time"
 
@@ -41,7 +42,6 @@ func (m *mongoDB) Find(ctx context.Context, collection string, filter map[string
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("unable to find document in collection %s", collection))
 	}
-	defer cursor.Close(ctx)
 	return cursor, nil
 }
 
@@ -55,12 +55,9 @@ func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[stri
 }
 
 // Update updates an existing document
-func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update interface{}) error {
+func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) error {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
-	res, err := c.UpdateOne(ctx, filter, update)
-	if res.MatchedCount != 1 {
-		return errors.Wrap(err, "there is no document corresponding to the filter")
-	}
+	_, err := c.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to update document in collection %s", collection))
 	}
