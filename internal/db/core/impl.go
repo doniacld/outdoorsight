@@ -13,6 +13,7 @@ import (
 )
 
 const (
+	mongoURI       = "mongodb://127.0.0.1:27017"
 	outdoorsightDB = "outdoorsight"
 )
 
@@ -45,15 +46,6 @@ func (m *mongoDB) Find(ctx context.Context, collection string, filter map[string
 	return cursor, nil
 }
 
-// Delete deletes a document
-func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) error {
-	c := m.Client.Database(outdoorsightDB).Collection(collection)
-	if _, err := c.DeleteOne(ctx, filter); err != nil {
-		return errors.Wrap(err, fmt.Sprintf("unable to delete document in collection %s", collection))
-	}
-	return nil
-}
-
 // Update updates an existing document
 func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) error {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
@@ -64,10 +56,19 @@ func (m *mongoDB) Update(ctx context.Context, collection string, filter map[stri
 	return nil
 }
 
+// Delete deletes a document
+func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) error {
+	c := m.Client.Database(outdoorsightDB).Collection(collection)
+	if _, err := c.DeleteOne(ctx, filter); err != nil {
+		return errors.Wrap(err, fmt.Sprintf("unable to delete document in collection %s", collection))
+	}
+	return nil
+}
+
 // NewClient creates the connexion to the database and returns a mongo client
 func (m *mongoDB) NewClient() *mongo.Client {
 	// set client options
-	clientOptions := options.Client().ApplyURI("mongodb://127.0.0.1:27017")
+	clientOptions := options.Client().ApplyURI(mongoURI)
 	// connect to mongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()

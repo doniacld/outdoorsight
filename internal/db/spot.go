@@ -42,19 +42,19 @@ func (os *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (spot.De
 	return spotDetails, nil
 }
 
-// DeleteSpot deletes a spot from database
-func (os *OutdoorsightDB) DeleteSpot(ctx context.Context, spotName string) error {
-	if err := os.Delete(ctx, spotsCollection, spotNameFilter(spotName)); err != nil {
-		return errors.Wrap(err, fmt.Sprintf("unable to delete spot %s from DB", spotName))
-	}
-	return nil
-}
-
 // UpdateSpot updates a spot in database
 func (os *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd SpotDetails) error {
 	update := bson.D{{"$set", sd}}
 	if err := os.Update(ctx, spotsCollection, spotNameFilter(spotName), update); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to update spot %s in DB", spotName))
+	}
+	return nil
+}
+
+// DeleteSpot deletes a spot from database
+func (os *OutdoorsightDB) DeleteSpot(ctx context.Context, spotName string) error {
+	if err := os.Delete(ctx, spotsCollection, spotNameFilter(spotName)); err != nil {
+		return errors.Wrap(err, fmt.Sprintf("unable to delete spot %s from DB", spotName))
 	}
 	return nil
 }
@@ -66,6 +66,7 @@ func spotNameFilter(spotName string) map[string]interface{} {
 	}
 }
 
+// TODO DONIA try again to use it ?
 // decodeCursor transforms a mongo cursor into the interface that you want
 func decodeCursor(ctx context.Context, cursor *mongo.Cursor, format interface{}) (interface{}, error) {
 	for cursor.Next(ctx) {
