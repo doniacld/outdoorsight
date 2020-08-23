@@ -17,9 +17,9 @@ var GetSpotMeta = endpointdef.New(
 )
 
 // GetSpotRequest is the request structure
-var GetSpotRequest struct {
+type GetSpotRequest struct {
 	SpotName string `json:"spotName"`
 }
 
 // GetSpotResponse holds the response structure
-var GetSpotResponse spot.Details
+type GetSpotResponse spot.Details

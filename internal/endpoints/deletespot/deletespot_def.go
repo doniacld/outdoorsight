@@ -17,9 +17,9 @@ var DeleteSpotMeta = endpointdef.New(
 )
 
 // DeleteSpotRequest is the request structure
-var DeleteSpotRequest struct {
+type DeleteSpotRequest struct {
 	SpotName string `json:"spotName"`
 }
 
 // DeleteSpotResponse holds the response structure
-var DeleteSpotResponse spot.Details
+type DeleteSpotResponse spot.Details

@@ -16,7 +16,7 @@ var AddSpotMeta = endpointdef.New(
 )
 
 // AddSpotRequest is the request structure
-var AddSpotRequest spot.Details
+type AddSpotRequest spot.Details
 
 // AddSpotResponse holds the response structure
-var AddSpotResponse struct{}
+type AddSpotResponse spot.Details

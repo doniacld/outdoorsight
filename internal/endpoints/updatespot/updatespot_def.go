@@ -17,7 +17,7 @@ var UpdateSpotMeta = endpointdef.New(
 )
 
 // UpdateSpotRequest is the request
-var UpdateSpotRequest spot.Details
+type UpdateSpotRequest spot.Details
 
 // UpdateSpotResponse is the response
-var UpdateSpotResponse struct{}
+type UpdateSpotResponse spot.Details

@@ -3,11 +3,12 @@ package addspot
 import (
 	"context"
 	"encoding/json"
-	"github.com/pkg/errors"
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/db"
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
+
+	"github.com/pkg/errors"
 )
 
 // AddSpot adds a spot to your list
