@@ -6,6 +6,10 @@ import (
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
 )
 
+const (
+	DocAPIFile = "./doc/api/index.html"
+)
+
 // GetAPIDocMeta holds the endpoint information
 var GetAPIDocMeta = endpointdef.New(
 	"getAPIDoc",
@@ -15,7 +19,7 @@ var GetAPIDocMeta = endpointdef.New(
 )
 
 // GetAPIDocRequest is the request structure
-var GetAPIDocRequest struct{}
+type GetAPIDocRequest struct{}
 
 // GetAPIDocResponse holds the response structure
-var GetAPIDocResponse []byte
+type GetAPIDocResponse []byte

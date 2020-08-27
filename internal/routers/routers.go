@@ -40,22 +40,22 @@ type Routes []Route
 var routes = Routes{
 	Route{
 		getapidoc.GetAPIDocMeta,
-		getapidoc.GetAPIDoc,
-	},
-	{
-		getspot.GetSpotMeta,
-		getspot.GetSpot,
+		GetAPIDocHandler,
 	},
 	{
 		addspot.AddSpotMeta,
-		addspot.AddSpot,
+		AddSpotHandler,
+	},
+	{
+		getspot.GetSpotMeta,
+		GetSpotHandler,
 	},
 	{
 		deletespot.DeleteSpotMeta,
-		deletespot.DeleteSpot,
+		DeleteSpotHandler,
 	},
 	{
 		updatespot.UpdateSpotMeta,
-		updatespot.UpdateSpot,
+		UpdateSpotHandler,
 	},
 }

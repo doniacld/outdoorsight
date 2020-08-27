@@ -1,21 +1,19 @@
 package deletespot
 
 import (
-	"fmt"
-	"net/http"
+	"context"
+	"github.com/pkg/errors"
 
-	"github.com/doniacld/outdoorsight/internal/endpoints"
-
-	"github.com/gorilla/mux"
+	"github.com/doniacld/outdoorsight/internal/db"
 )
 
-// DeleteSpot returns all the details on a given spot
-// Idempotent endpoint, it will return its success code even the name is not found.
-func DeleteSpot(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	spotName := vars[endpoints.ParamSpotName]
+// DeleteSpot deletes a given spot
 
-	fmt.Println(spotName)
-	// set the response parameters
-	w.WriteHeader(DeleteSpotMeta.SuccessCode())
+func DeleteSpot(ctx context.Context, request DeleteSpotRequest) (DeleteSpotResponse, error) {
+	osDB := db.New()
+	err := osDB.DeleteSpot(ctx, request.SpotName)
+	if err != nil {
+		return DeleteSpotResponse{}, errors.Wrapf(err, "unable to delete spot %s", request.SpotName)
+	}
+	return DeleteSpotResponse{}, nil
 }

@@ -3,48 +3,49 @@ package updatespot
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/db"
-	"github.com/doniacld/outdoorsight/internal/endpoints"
 
-	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 )
 
 // UpdateSpot returns all the details about a given spot
-func UpdateSpot(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	spotName := vars[endpoints.ParamSpotName]
-
-	// decode the body into spotDetails structure
-	var spotDetailsDB db.SpotDetails
-	if err := json.NewDecoder(r.Body).Decode(&spotDetailsDB); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// call the database
-	osDB := db.New()
-	if err := osDB.UpdateSpot(context.TODO(), spotName, spotDetailsDB); err != nil {
-		panic(errors.Wrap(err, fmt.Sprintf("unable to update spot %s", spotName)))
-	}
-
-	// get the updated spot
-	if spotName != spotDetailsDB.Name {
-		spotName = spotDetailsDB.Name
-	}
-	res, err := osDB.GetSpot(context.TODO(), spotName)
+func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotResponse, error) {
+	// convert the request into spotDetails DB structure
+	spotDetailsDB, err := convertToSpotDetailsDB(request)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return UpdateSpotResponse{}, errors.Wrapf(err, "unable to delete spot %s", request.Name)
 	}
 
-	// set the response parameters
-	w.WriteHeader(UpdateSpotMeta.SuccessCode())
-	if err := json.NewEncoder(w).Encode(res); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	// update the spot in DB
+	osDB := db.New()
+	if err := osDB.UpdateSpot(ctx, request.Name, spotDetailsDB); err != nil {
+		return UpdateSpotResponse{}, errors.Wrapf(err, "unable to update spot %s", request.Name)
 	}
+
+	// get the updated spot name
+	if request.Name != spotDetailsDB.Name {
+		request.Name = spotDetailsDB.Name
+	}
+	spotDetails, err := osDB.GetSpot(ctx, request.Name)
+	if err != nil {
+		return UpdateSpotResponse{}, errors.Wrapf(err, "unable to get spot %s", request.Name)
+	}
+
+	response := UpdateSpotResponse(spotDetails)
+	return response, nil
+}
+
+// convertToSpotDetailsDB converts the request to spotDetails DB structure
+func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, error) {
+	data, err := json.Marshal(&request)
+	if err != nil {
+		return db.SpotDetails{}, errors.Wrapf(err, "error while marshalling request '%s'", request)
+	}
+
+	var spotDetailsDB db.SpotDetails
+	if err := json.Unmarshal(data, &spotDetailsDB); err != nil {
+		return db.SpotDetails{}, errors.Wrapf(err, "error while unmarshalling spotDetailsDB from request '%s'", request)
+	}
+	return spotDetailsDB, nil
 }

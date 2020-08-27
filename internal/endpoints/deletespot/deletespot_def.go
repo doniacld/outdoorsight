@@ -5,7 +5,6 @@ import (
 
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
 	"github.com/doniacld/outdoorsight/internal/endpoints"
-	"github.com/doniacld/outdoorsight/internal/spot"
 )
 
 // DeleteSpotMeta holds the endpoint information
@@ -22,4 +21,4 @@ type DeleteSpotRequest struct {
 }
 
 // DeleteSpotResponse holds the response structure
-type DeleteSpotResponse spot.Details
+type DeleteSpotResponse struct {}
