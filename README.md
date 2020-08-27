@@ -29,6 +29,35 @@ Run mongoDB image
 
     make docker_run_mongo
 
+### Mongo
+
+Connect to mongo docker
+
+    18:48 $ docker exec -it mongoDB  bash
+
+Connect to mongo
+
+    root@2673d1c1092f:/# mongo
+
+See databases
+
+    > show databases
+
+Use `outdoorsight` database
+
+    > use outdoorsight
+    switched to db outdoorsight
+
+Show collections 
+
+    > show collections
+    spots
+
+See all elements in `spots` collection
+
+    > db.spots.find()
+
+
 ## Available Functionalities
 
 | Endpoint    | Description                                       |

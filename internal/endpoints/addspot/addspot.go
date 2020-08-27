@@ -3,8 +3,9 @@ package addspot
 import (
 	"context"
 	"encoding/json"
-
 	"github.com/doniacld/outdoorsight/internal/db"
+	"go.mongodb.org/mongo-driver/bson"
+	"log"
 
 	"github.com/pkg/errors"
 )
@@ -26,12 +27,7 @@ func AddSpot(request AddSpotRequest) (AddSpotResponse, error) {
 	if err != nil {
 		return AddSpotResponse{}, errors.Wrapf(err, "unable to get spot %s", spotDetails.Name)
 	}
-
-	response, err := convertToAddSpotResponse(spotDetailsDB)
-	if err != nil {
-		return AddSpotResponse{}, errors.Wrapf(err, "error while converting to %s", spotDetails.Name)
-	}
-
+	response := AddSpotResponse(spotDetails)
 	return response, nil
 }
 
@@ -43,22 +39,10 @@ func convertToSpotDetailsDB(request AddSpotRequest) (db.SpotDetails, error) {
 	}
 
 	var spotDetailsDB db.SpotDetails
-	if err := json.Unmarshal(data, &spotDetailsDB); err != nil {
+	if err := bson.UnmarshalExtJSON(data, true, &spotDetailsDB); err != nil {
+		// if err := bson.Unmarshal(data, &spotDetailsDB); err != nil {
 		return db.SpotDetails{}, errors.Wrapf(err, "error while unmarshalling spotDetailsDB from request '%s'", request)
 	}
+	log.Printf("convert addSpotRequest to spotDetailsDB: %q, %T", spotDetailsDB, spotDetailsDB)
 	return spotDetailsDB, nil
-}
-
-// convertToAddSpotResponse converts the spotDetails DB to AddSpotResponse
-func convertToAddSpotResponse(spotDetailsDB db.SpotDetails) (AddSpotResponse, error) {
-	data, err := json.Marshal(&spotDetailsDB)
-	if err != nil {
-		return AddSpotResponse{}, errors.Wrapf(err, "error while marshalling spotDetailsDB '%s'", spotDetailsDB)
-	}
-
-	var response AddSpotResponse
-	if err := json.Unmarshal(data, &response); err != nil {
-		return AddSpotResponse{}, errors.Wrapf(err, "error while unmarshalling request from '%s'", spotDetailsDB)
-	}
-	return response, nil
 }

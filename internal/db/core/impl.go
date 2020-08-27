@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	mongoURI       = "mongodb://127.0.0.1:27017"
+	mongoURI       = "mongodb://172.17.0.2:27017"
 	outdoorsightDB = "outdoorsight"
 )
 
@@ -30,6 +30,7 @@ func NewDB() DB {
 // Insert creates a new document in DB
 func (m *mongoDB) Insert(ctx context.Context, collection string, doc interface{}) error {
 	c := m.Client.Database(outdoorsightDB).Collection(collection)
+	log.Print("insert document:", doc)
 	if _, err := c.InsertOne(ctx, doc); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to insert document in collection %s", collection))
 	}
@@ -74,7 +75,7 @@ func (m *mongoDB) NewClient() *mongo.Client {
 	defer cancel()
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		panic(errors.New(fmt.Sprintf("unable to connect to mongo %q", &clientOptions)))
 	}
 
 	return client

@@ -2,17 +2,19 @@ package transports
 
 import (
 	"encoding/json"
-	"github.com/doniacld/outdoorsight/internal/endpoints"
-	"github.com/doniacld/outdoorsight/internal/endpoints/addspot"
-	"github.com/doniacld/outdoorsight/internal/endpoints/deletespot"
-	"github.com/doniacld/outdoorsight/internal/endpoints/getspot"
-	"github.com/doniacld/outdoorsight/internal/endpoints/updatespot"
-	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
+
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/endpoints"
+	"github.com/doniacld/outdoorsight/internal/endpoints/addspot"
+	"github.com/doniacld/outdoorsight/internal/endpoints/deletespot"
 	"github.com/doniacld/outdoorsight/internal/endpoints/getapidoc"
+	"github.com/doniacld/outdoorsight/internal/endpoints/getspot"
+	"github.com/doniacld/outdoorsight/internal/endpoints/updatespot"
+
+	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 )
 
 // DecodeRequestGetAPIDoc decodes the request into the internal structure
