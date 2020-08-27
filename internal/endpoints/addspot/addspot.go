@@ -19,7 +19,7 @@ func AddSpot(request AddSpotRequest) (AddSpotResponse, error) {
 
 	// call the database to add the details
 	osDB := db.New()
-	if err := osDB.AddSpot(context.TODO(), db.SpotDetails{}); err != nil {
+	if err := osDB.AddSpot(context.TODO(), spotDetailsDB); err != nil {
 		panic(errors.Wrap(err, "unable to add spot"))
 	}
 	// call the database to get the details (a way to verify that we really added the data)

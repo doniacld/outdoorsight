@@ -16,6 +16,7 @@ const (
 
 // AddSpot adds a spot with all its details in database
 func (os *OutdoorsightDB) AddSpot(ctx context.Context, details SpotDetails) error {
+
 	if err := os.Insert(ctx, spotsCollection, details); err != nil {
 		return errors.Wrap(err, "unable to add spot in DB")
 	}
