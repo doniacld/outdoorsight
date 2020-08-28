@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/doniacld/outdoorsight/errors"
 	"github.com/doniacld/outdoorsight/internal/db/core"
 	"github.com/doniacld/outdoorsight/internal/spot"
 )
@@ -10,10 +12,10 @@ import (
 // All the access to the database are hidden here
 type DB interface {
 	// Manage spot
-	AddSpot(ctx context.Context, details SpotDetails) error
-	GetSpot(ctx context.Context, spotName string) (spot.Details, error)
-	DeleteSpot(ctx context.Context, spotName string) error
-	UpdateSpot(ctx context.Context, spotName string, update SpotDetails) error
+	AddSpot(ctx context.Context, details SpotDetails) *errors.OsError
+	GetSpot(ctx context.Context, spotName string) (spot.Details, *errors.OsError)
+	DeleteSpot(ctx context.Context, spotName string) *errors.OsError
+	UpdateSpot(ctx context.Context, spotName string, update SpotDetails) *errors.OsError
 }
 
 // OutdoorsightDB is the structure holding the core DB

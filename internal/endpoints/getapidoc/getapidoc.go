@@ -1,20 +1,21 @@
 package getapidoc
 
 import (
-	"github.com/pkg/errors"
+	"github.com/doniacld/outdoorsight/errors"
 	"io/ioutil"
+	"net/http"
 )
 
 const (
+	// docAPIFile is copied during the build of the docker image
 	docAPIFile = "./doc/api/index.html"
 )
 
 // GetAPIDoc returns the documentation on the API
-func GetAPIDoc(_ GetAPIDocRequest) (GetAPIDocResponse, error) {
+func GetAPIDoc(_ GetAPIDocRequest) (GetAPIDocResponse, *errors.OsError) {
 	file, err := ioutil.ReadFile(docAPIFile)
 	if err != nil {
-		panic(errors.Wrap(err, "unable to read doc api file"))
+		return GetAPIDocResponse{}, errors.NewFromError(http.StatusInternalServerError, err, "unable to read doc api file")
 	}
-
 	return file, nil
 }

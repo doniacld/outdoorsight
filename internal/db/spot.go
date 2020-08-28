@@ -3,11 +3,10 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/doniacld/outdoorsight/errors"
 	"github.com/doniacld/outdoorsight/internal/spot"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-
-	"github.com/pkg/errors"
+	"net/http"
 )
 
 const (
@@ -15,7 +14,7 @@ const (
 )
 
 // AddSpot adds a spot with all its details in database
-func (os *OutdoorsightDB) AddSpot(ctx context.Context, details SpotDetails) error {
+func (os *OutdoorsightDB) AddSpot(ctx context.Context, details SpotDetails) *errors.OsError {
 
 	if err := os.Insert(ctx, spotsCollection, details); err != nil {
 		return errors.Wrap(err, "unable to add spot in DB")
@@ -24,7 +23,7 @@ func (os *OutdoorsightDB) AddSpot(ctx context.Context, details SpotDetails) erro
 }
 
 // GetSpot retrieves a given spot with its details from database
-func (os *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (spot.Details, error) {
+func (os *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (spot.Details, *errors.OsError) {
 	// retrieve spot details in DB
 	cursor, err := os.Find(ctx, spotsCollection, spotNameFilter(spotName))
 	if err != nil {
@@ -36,19 +35,19 @@ func (os *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (spot.De
 	for cursor.Next(ctx) {
 		err := cursor.Decode(&spotDetails)
 		if err != nil {
-			return spot.Details{}, errors.Wrap(err, "unable to decode cursor")
+			return spot.Details{}, errors.NewFromError(http.StatusInternalServerError, err, "unable to decode cursor")
 		}
 	}
 	// case the name is not found
 	if len(spotDetails.Name) == 0 {
-		return spot.Details{}, errors.New(fmt.Sprintf("spotDetails '%s' is not found", spotName))
+		return spot.Details{}, errors.New(http.StatusNotFound, fmt.Sprintf("spotDetails '%s' is not found", spotName))
 
 	}
 	return spotDetails, nil
 }
 
 // UpdateSpot updates a spot in database
-func (os *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd SpotDetails) error {
+func (os *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd SpotDetails) *errors.OsError {
 	update := bson.D{{"$set", sd}}
 	if err := os.Update(ctx, spotsCollection, spotNameFilter(spotName), update); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to update spot %s in DB", spotName))
@@ -57,7 +56,7 @@ func (os *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd Sp
 }
 
 // DeleteSpot deletes a spot from database
-func (os *OutdoorsightDB) DeleteSpot(ctx context.Context, spotName string) error {
+func (os *OutdoorsightDB) DeleteSpot(ctx context.Context, spotName string) *errors.OsError {
 	if err := os.Delete(ctx, spotsCollection, spotNameFilter(spotName)); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("unable to delete spot %s from DB", spotName))
 	}
@@ -69,16 +68,4 @@ func spotNameFilter(spotName string) map[string]interface{} {
 	return map[string]interface{}{
 		"name": spotName,
 	}
-}
-
-// TODO DONIA try again to use it ?
-// decodeCursor transforms a mongo cursor into the interface that you want
-func decodeCursor(ctx context.Context, cursor *mongo.Cursor, format interface{}) (interface{}, error) {
-	for cursor.Next(ctx) {
-		err := cursor.Decode(&format)
-		if err != nil {
-			return nil, errors.Wrap(err, "unable to decode cursor")
-		}
-	}
-	return format, nil
 }
