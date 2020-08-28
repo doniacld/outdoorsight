@@ -39,7 +39,11 @@ func (os *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (spot.De
 			return spot.Details{}, errors.Wrap(err, "unable to decode cursor")
 		}
 	}
+	// case the name is not found
+	if len(spotDetails.Name) == 0 {
+		return spot.Details{}, errors.New(fmt.Sprintf("spotDetails '%s' is not found", spotName))
 
+	}
 	return spotDetails, nil
 }
 

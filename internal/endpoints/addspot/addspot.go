@@ -25,7 +25,7 @@ func AddSpot(request AddSpotRequest) (AddSpotResponse, error) {
 	// call the database to get the details (a way to verify that we really added the data)
 	spotDetails, err := osDB.GetSpot(context.TODO(), spotDetailsDB.Name)
 	if err != nil {
-		return AddSpotResponse{}, errors.Wrapf(err, "unable to get spot %s", spotDetails.Name)
+		return AddSpotResponse{}, errors.Wrapf(err, "unable to get spot %s details", spotDetails.Name)
 	}
 	response := AddSpotResponse(spotDetails)
 	return response, nil

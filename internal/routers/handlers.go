@@ -72,14 +72,14 @@ func GetSpotHandler(w http.ResponseWriter, r *http.Request) {
 	// call the endpoint
 	response, err := getspot.GetSpot(request)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error while calling addSpot endpoint : %s", err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("error while calling getSpot endpoint : %s", err.Error()), http.StatusBadRequest)
 		return
 	}
 
 	// encode the response
 	err = transports.EncodeResponseGetSpot(w, response)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("error while encoding addSpot response : %s", err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("error while encoding getSpot response : %s", err.Error()), http.StatusBadRequest)
 		return
 	}
 }

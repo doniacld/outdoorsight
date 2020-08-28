@@ -18,7 +18,8 @@ BINARY_PATH=$(BINARY_DESTINATION)/$(BINARY_NAME)
 DOCKERCMD=docker
 DOCKERBBUILD=$(DOCKERCMD) build
 DOCKERRUN=$(DOCKERCMD) run
-
+DOCKERSTOP=$(DOCKERCMD) stop
+DOCKERRM=$(DOCKERCMD) rm
 # Targets
 build:
 		$(GOBUILD) -o $(BINARY_PATH) -v $(SOURCE_ENTRYPOINT)
@@ -47,6 +48,9 @@ run_outdoorsight:
 		$(MAKE) docker_build
 		$(MAKE) docker_run_mongo
 		$(MAKE) docker_run
+stop_outdoorsight:
+		$(DOCKERSTOP) outdoorsight mongoDB
+		$(DOCKERRM) outdoorsight mongoDB
 help:
 	@echo "Compilation, image build, documentation build of Outdoorsight app"
 	@echo "build               : Build Outdoorsight app"
@@ -57,6 +61,7 @@ help:
 	@echo "docker_run          : Run the Outdoorsight docker image"
 	@echo "docker_run_mongo    : Run the Mongo docker image"
 	@echo "run_outdoorsight    : Build the app, build and run the app docker image and mongo! Just launch your curl."
+	@echo "stop_outdoorsight   : Spot the docker containers and delete them"
 	@echo "doc                 : Render the yaml api documentation into a html"
 	@echo "clean               : Remove temporary files"
 	@echo "clean_cache         : Remove the cache"
