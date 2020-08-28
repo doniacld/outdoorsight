@@ -11,9 +11,17 @@ It is a CRUD and RESTful API, communicating through http.
 
 ## Setup
 
-#### Prerequisites
+Prerequisites
 
 - Install docker
+
+## Run the app
+
+    make run_outdoorsight 
+
+Please note if you already ran this command, launch:
+    
+    make stop_outdoorsight
 
 ## Install
 
@@ -57,6 +65,7 @@ See all elements in `spots` collection
 
     > db.spots.find()
 
+If you want to check more infos, please refer to [mongoDB documentation](https://docs.mongodb.com/manual).
 
 ## Available Functionalities
 
