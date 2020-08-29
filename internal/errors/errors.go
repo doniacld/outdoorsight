@@ -9,7 +9,7 @@ import (
 
 // OsError represents the internal representation of an error
 type OsError struct {
-	HTTPCode int    `json:"httpCode"`
+	HTTPCode int    `json:"HTTPCode"`
 	Message  string `json:"message"`
 }
 

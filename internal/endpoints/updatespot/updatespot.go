@@ -8,20 +8,29 @@ import (
 
 	"github.com/doniacld/outdoorsight/internal/db"
 	"github.com/doniacld/outdoorsight/internal/errors"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 // UpdateSpot returns all the details about a given spot
 func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotResponse, *errors.OsError) {
-	// convert the request into spotDetails DB structure
+
+	osDB := db.New()
+
+	// call the database to get the details (a way to verify that we really added the data)
+	spotDetails, err := osDB.GetSpot(ctx, request.Name)
+	if err != nil {
+		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot '%s' details", request.Name))
+	}
+	if spotDetails.Name == "" {
+		return UpdateSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' not found", request.Name))
+	}
+
+	// convert the request into spotDetails CoreDB structure
 	spotDetailsDB, err := convertToSpotDetailsDB(request)
 	if err != nil {
-		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to delete spot %s", request.Name))
+		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to update spot %s", request.Name))
 	}
 
 	// update the spot in DB
-	osDB := db.New()
 	if err := osDB.UpdateSpot(ctx, request.Name, spotDetailsDB); err != nil {
 		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to update spot %s", request.Name))
 	}
@@ -30,7 +39,7 @@ func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotRespo
 	if request.Name != spotDetailsDB.Name {
 		request.Name = spotDetailsDB.Name
 	}
-	spotDetails, err := osDB.GetSpot(ctx, request.Name)
+	spotDetails, err = osDB.GetSpot(ctx, request.Name)
 	if err != nil {
 		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot %s", request.Name))
 	}
@@ -39,7 +48,7 @@ func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotRespo
 	return response, nil
 }
 
-// convertToSpotDetailsDB converts the request to spotDetails DB structure
+// convertToSpotDetailsDB converts the request to spotDetails CoreDB structure
 func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, *errors.OsError) {
 	data, err := json.Marshal(&request)
 	if err != nil {
@@ -47,7 +56,7 @@ func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, *errors.
 	}
 
 	var spotDetailsDB db.SpotDetails
-	if err := bson.Unmarshal(data, &spotDetailsDB); err != nil {
+	if err := json.Unmarshal(data, &spotDetailsDB); err != nil {
 		return db.SpotDetails{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("error while unmarshalling spotDetailsDB from request '%q'", request))
 	}
 	return spotDetailsDB, nil

@@ -1,6 +1,7 @@
 package updatespot
 
 import (
+	"github.com/doniacld/outdoorsight/internal/errors"
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
@@ -21,3 +22,11 @@ type UpdateSpotRequest spot.Details
 
 // UpdateSpotResponse is the response
 type UpdateSpotResponse spot.Details
+
+func (request UpdateSpotRequest) Validate() *errors.OsError {
+	r := spot.Details(request)
+	if err := r.Validate(); err != nil {
+		return errors.New(http.StatusBadRequest, "error while validating updateSpot request")
+	}
+	return nil
+}

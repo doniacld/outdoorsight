@@ -14,12 +14,6 @@ paths:
       responses:
         200:
           description: A list of spots
-          schema:
-            $ref: 'definitions/spots.yml#/spot'
-        404:
-          description: Error 404
-          schema:
-            $ref: 'definitions/errors.yml#/standard404ErrorResponse'
         500:
           description: Error 500
           schema:
@@ -37,7 +31,7 @@ paths:
             $ref: 'definitions/spots.yml#/spot'
       responses:
         200:
-          description: A list of spots
+          description: Spot details
           schema:
             $ref: 'definitions/spots.yml#/spot'
         404:
@@ -98,7 +92,7 @@ paths:
             $ref: 'definitions/spots.yml#/spot'
       responses:
         200:
-          description: A list of spots
+          description: The spot is updated
           schema:
             $ref: 'definitions/spots.yml#/spot'
         404:

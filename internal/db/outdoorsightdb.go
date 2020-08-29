@@ -20,12 +20,12 @@ type DB interface {
 
 // OutdoorsightDB is the structure holding the core DB
 type OutdoorsightDB struct {
-	core.DB
+	core.CoreDB
 }
 
 // NewClient creates the OutdoorsightDB structure
 func New() DB {
-	mongoDB := core.NewDB()
-	osDB := OutdoorsightDB{mongoDB}
+	coreDB := core.NewDB()
+	osDB := OutdoorsightDB{coreDB}
 	return &osDB
 }

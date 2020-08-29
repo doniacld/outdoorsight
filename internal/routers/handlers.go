@@ -39,6 +39,8 @@ func GetAPIDocHandler(w http.ResponseWriter, r *http.Request) {
 
 // AddSpotHandler is the handler of AddSpot endpoint
 func AddSpotHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.TODO()
+
 	// decode request
 	request, err := transports.DecodeRequestAddSpot(r)
 	if err != nil {
@@ -47,7 +49,7 @@ func AddSpotHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call the endpoint
-	response, err := addspot.AddSpot(request)
+	response, err := addspot.AddSpot(ctx, request)
 	if err != nil {
 		errors.HTTPError(w, err)
 		return

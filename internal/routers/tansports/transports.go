@@ -36,12 +36,17 @@ func EncodeResponseGetAPIDoc(w http.ResponseWriter, resp getapidoc.GetAPIDocResp
 
 // DecodeRequestAddSpot decodes the request into the internal structure
 func DecodeRequestAddSpot(r *http.Request) (addspot.AddSpotRequest, *errors.OsError) {
+	// decode body
 	var addSpotRequest addspot.AddSpotRequest
 	if err := json.NewDecoder(r.Body).Decode(&addSpotRequest); err != nil {
 		return addspot.AddSpotRequest{}, errors.NewFromError(http.StatusBadRequest, err, "unable to decode addSpotRequest")
 	}
 	defer r.Body.Close()
 
+	// call validate request
+	if err := addSpotRequest.Validate(); err != nil {
+		return addspot.AddSpotRequest{}, errors.Wrap(err, "addSpotRequest is not valid")
+	}
 	return addSpotRequest, nil
 }
 
@@ -85,7 +90,7 @@ func DecodeRequestDeleteSpot(r *http.Request) (deletespot.DeleteSpotRequest, *er
 
 // EncodeResponseDeleteSpot encodes the response
 func EncodeResponseDeleteSpot(w http.ResponseWriter, _ deletespot.DeleteSpotResponse) *errors.OsError {
-	w.WriteHeader(getspot.GetSpotMeta.SuccessCode())
+	w.WriteHeader(deletespot.DeleteSpotMeta.SuccessCode())
 	return nil
 }
 
@@ -101,6 +106,10 @@ func DecodeRequestUpdateSpot(r *http.Request) (updatespot.UpdateSpotRequest, *er
 	}
 	defer r.Body.Close()
 
+	// call validate request
+	if err := updateSpotRequest.Validate(); err != nil {
+		return updatespot.UpdateSpotRequest{}, errors.Wrap(err, "updateSpotRequest is not valid")
+	}
 	return updateSpotRequest, nil
 }
 

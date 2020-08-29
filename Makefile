@@ -37,14 +37,17 @@ clean_cache:
 docker_build:
 		$(DOCKERBBUILD) -t outdoorsight .
 docker_run:
+		$(DOCKERRUN) --net=host -p 8080:8080 outdoorsight
+docker_run_link:
 		$(DOCKERRUN) -p 8080:8080 --name outdoorsight --link=mongoDB:database outdoorsight
 docker_run_mongo:
 		cd misc/mongo
 		$(DOCKERRUN) -d --name mongoDB mongo
-doc:
+render_doc:
 		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml
 run_outdoorsight:
 		$(MAKE) build
+		$(MAKE) render_doc
 		$(MAKE) docker_build
 		$(MAKE) docker_run_mongo
 		$(MAKE) docker_run
@@ -62,7 +65,7 @@ help:
 	@echo "docker_run_mongo    : Run the Mongo docker image"
 	@echo "run_outdoorsight    : Build the app, build and run the app docker image and mongo! Just launch your curl."
 	@echo "stop_outdoorsight   : Spot the docker containers and delete them"
-	@echo "doc                 : Render the yaml api documentation into a html"
+	@echo "render_doc          : Render the yaml api documentation into a html"
 	@echo "clean               : Remove temporary files"
 	@echo "clean_cache         : Remove the cache"
 

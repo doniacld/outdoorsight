@@ -14,29 +14,38 @@ import (
 )
 
 // AddSpot adds a spot to your list
-func AddSpot(request AddSpotRequest) (AddSpotResponse, *errors.OsError) {
+func AddSpot(ctx context.Context, request AddSpotRequest) (AddSpotResponse, *errors.OsError) {
 	spotDetailsDB, err := convertToSpotDetailsDB(request)
 	if err != nil {
-		return AddSpotResponse{}, errors.Wrap(err, "error while converting to spotDetails DB structure")
+		return AddSpotResponse{}, errors.Wrap(err, "error while converting to spotDetails CoreDB structure")
 	}
 
-	// call the database to add the details
 	osDB := db.New()
-	if err := osDB.AddSpot(context.TODO(), spotDetailsDB); err != nil {
+
+	// call the database to get the details (a way to verify that we really added the data)
+	spotDetails, err := osDB.GetSpot(ctx, spotDetailsDB.Name)
+	if err.HTTPCode != http.StatusNotFound {
+		return AddSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot '%s' details", spotDetails.Name))
+	}
+	if spotDetails.Name == request.Name {
+		return AddSpotResponse{}, errors.New(http.StatusConflict, fmt.Sprintf("spot '%s' already exists in database", spotDetails.Name))
+	}
+
+	if err := osDB.AddSpot(ctx, spotDetailsDB); err != nil {
 		return AddSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to add spot %s", request.Name))
 	}
 	// call the database to get the details (a way to verify that we really added the data)
-	spotDetails, err := osDB.GetSpot(context.TODO(), spotDetailsDB.Name)
+	spotDetails, err = osDB.GetSpot(ctx, spotDetailsDB.Name)
 	if err != nil {
 		return AddSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot %s details", spotDetails.Name))
 	}
 
-	// convert DB response into addSpotResponse structure
+	// convert CoreDB response into addSpotResponse structure
 	response := AddSpotResponse(spotDetails)
 	return response, nil
 }
 
-// convertToSpotDetailsDB converts the request to spotDetails DB structure
+// convertToSpotDetailsDB converts the request to spotDetails CoreDB structure
 func convertToSpotDetailsDB(request AddSpotRequest) (db.SpotDetails, *errors.OsError) {
 	data, err := json.Marshal(&request)
 	if err != nil {

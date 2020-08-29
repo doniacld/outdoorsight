@@ -1,0 +1,19 @@
+{
+  "name": "LesSurplombs",
+  "routes": [
+    {
+      "name": "AlineLaMaline",
+      "level": "5a",
+      "points": 5,
+      "information": "Not so easy"
+    },
+    {
+      "name": "HenriLeChauve",
+      "level": "6a+",
+      "points": 8
+    }
+  ],
+  "metadata": {
+    "info": "Park at the canoe spot"
+  }
+}
