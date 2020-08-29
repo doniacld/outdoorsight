@@ -1,7 +1,7 @@
 package getapidoc
 
 import (
-	"github.com/doniacld/outdoorsight/errors"
+	"github.com/doniacld/outdoorsight/internal/errors"
 	"io/ioutil"
 	"net/http"
 )

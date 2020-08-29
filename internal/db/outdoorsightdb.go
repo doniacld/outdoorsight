@@ -3,8 +3,8 @@ package db
 import (
 	"context"
 
-	"github.com/doniacld/outdoorsight/errors"
 	"github.com/doniacld/outdoorsight/internal/db/core"
+	"github.com/doniacld/outdoorsight/internal/errors"
 	"github.com/doniacld/outdoorsight/internal/spot"
 )
 

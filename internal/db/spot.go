@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
-	"github.com/doniacld/outdoorsight/errors"
+	"github.com/doniacld/outdoorsight/internal/errors"
 	"github.com/doniacld/outdoorsight/internal/spot"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"

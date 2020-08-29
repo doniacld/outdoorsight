@@ -31,15 +31,21 @@ func TestOutdoorsightDB_AddSpot(t *testing.T) {
 			expectedErr: "unable to insert spot",
 		},
 	}
+
 	fmt.Println(tt)
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	osDB := mock_core.NewMockDB(ctrl)
 
-	osDB.EXPECT().Insert(ctx, "spot", gomock.Any()).Return(errors.New("unable to insert spot")).AnyTimes()
-	db := New()
+	osDB := mock_core.NewMockDB(ctrl)
+//	osDB.EXPECT().Insert(ctx, "spot", gomock.Any()).Return(errors.New("unable to insert spot"))
+
+	db := OutdoorsightDB{
+		osDB,
+	}
 	err := db.AddSpot(ctx, SpotDetails{})
 	assert.Error(t, err)
+
 	/*
 		for n, tc := range tt {
 			t.Run(n, func(t *testing.T) {

@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/errors"
 	"github.com/doniacld/outdoorsight/internal/endpoints/addspot"
 	"github.com/doniacld/outdoorsight/internal/endpoints/deletespot"
 	"github.com/doniacld/outdoorsight/internal/endpoints/getapidoc"
 	"github.com/doniacld/outdoorsight/internal/endpoints/getspot"
 	"github.com/doniacld/outdoorsight/internal/endpoints/updatespot"
+	"github.com/doniacld/outdoorsight/internal/errors"
 	"github.com/doniacld/outdoorsight/internal/routers/tansports"
 )
 

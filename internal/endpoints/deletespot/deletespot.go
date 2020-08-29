@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/doniacld/outdoorsight/errors"
 	"github.com/doniacld/outdoorsight/internal/db"
+	"github.com/doniacld/outdoorsight/internal/errors"
 )
 
 // DeleteSpot deletes a given spot

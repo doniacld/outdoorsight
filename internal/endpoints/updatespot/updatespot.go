@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/doniacld/outdoorsight/errors"
 	"github.com/doniacld/outdoorsight/internal/db"
+	"github.com/doniacld/outdoorsight/internal/errors"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

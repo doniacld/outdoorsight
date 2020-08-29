@@ -3,7 +3,7 @@ package getspot
 import (
 	"context"
 	"fmt"
-	"github.com/doniacld/outdoorsight/errors"
+	"github.com/doniacld/outdoorsight/internal/errors"
 
 	"github.com/doniacld/outdoorsight/internal/db"
 )

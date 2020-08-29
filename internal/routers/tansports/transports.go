@@ -2,7 +2,7 @@ package transports
 
 import (
 	"encoding/json"
-	"github.com/doniacld/outdoorsight/errors"
+	"github.com/doniacld/outdoorsight/internal/errors"
 
 	"net/http"
 

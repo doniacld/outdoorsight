@@ -3,7 +3,7 @@ package core
 import (
 	"context"
 
-	"github.com/doniacld/outdoorsight/errors"
+	"github.com/doniacld/outdoorsight/internal/errors"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
