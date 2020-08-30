@@ -20,7 +20,7 @@ type DB interface {
 
 // OutdoorsightDB is the structure holding the core DB
 type OutdoorsightDB struct {
-	core.CoreDB
+	core.DB
 }
 
 // NewClient creates the OutdoorsightDB structure

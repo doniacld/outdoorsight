@@ -21,6 +21,8 @@ DOCKERRUN=$(DOCKERCMD) run
 DOCKERSTOP=$(DOCKERCMD) stop
 DOCKERRM=$(DOCKERCMD) rm
 # Targets
+tidy:
+	$(GOMOD) tidy
 build:
 		$(GOBUILD) -o $(BINARY_PATH) -v $(SOURCE_ENTRYPOINT)
 run:
@@ -56,6 +58,7 @@ stop_outdoorsight:
 		$(DOCKERRM) outdoorsight mongoDB
 help:
 	@echo "Compilation, image build, documentation build of Outdoorsight app"
+	@echo "tidy                : Update dependencies (go mod tidy)"
 	@echo "build               : Build Outdoorsight app"
 	@echo "run                 : Run Outdoorsight app"
 	@echo "test                : Launch all units tests"

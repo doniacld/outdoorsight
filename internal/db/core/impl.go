@@ -20,9 +20,9 @@ const (
 	outdoorsightDB = "outdoorsight"
 )
 
-// Insert creates a new document in CoreDB
-func (m *MongoDB) Insert(ctx context.Context, collection string, doc interface{}) *errors.OsError {
-	c := m.Client.Database(outdoorsightDB).Collection(collection)
+// Insert creates a new document in DB
+func (m *mongoDB) Insert(ctx context.Context, collection string, doc interface{}) *errors.OsError {
+	c := m.client.Database(outdoorsightDB).Collection(collection)
 	if _, err := c.InsertOne(ctx, doc); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to insert document in collection %s", collection))
 	}
@@ -30,8 +30,8 @@ func (m *MongoDB) Insert(ctx context.Context, collection string, doc interface{}
 }
 
 // Find retrieves the cursor corresponding to the given filter
-func (m *MongoDB) Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, *errors.OsError) {
-	c := m.Client.Database(outdoorsightDB).Collection(collection)
+func (m *mongoDB) Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, *errors.OsError) {
+	c := m.client.Database(outdoorsightDB).Collection(collection)
 	cursor, err := c.Find(ctx, filter)
 	if err != nil {
 		return nil, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to find document in collection %s", collection))
@@ -40,8 +40,8 @@ func (m *MongoDB) Find(ctx context.Context, collection string, filter map[string
 }
 
 // Update updates an existing document
-func (m *MongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) *errors.OsError {
-	c := m.Client.Database(outdoorsightDB).Collection(collection)
+func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) *errors.OsError {
+	c := m.client.Database(outdoorsightDB).Collection(collection)
 	res, err := c.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to update document in collection %s", collection))
@@ -58,8 +58,8 @@ func (m *MongoDB) Update(ctx context.Context, collection string, filter map[stri
 }
 
 // Delete deletes a document
-func (m *MongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) *errors.OsError {
-	c := m.Client.Database(outdoorsightDB).Collection(collection)
+func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) *errors.OsError {
+	c := m.client.Database(outdoorsightDB).Collection(collection)
 	if _, err := c.DeleteOne(ctx, filter); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to delete document in collection %s", collection))
 	}
@@ -67,10 +67,10 @@ func (m *MongoDB) Delete(ctx context.Context, collection string, filter map[stri
 }
 
 // NewClient creates the connexion to the database and returns a mongo client
-func (m *MongoDB) NewClient() *mongo.Client {
+func (m *mongoDB) NewClient() *mongo.Client {
 	// set client options
 	clientOptions := options.Client().ApplyURI(mongoURI)
-	// connect to MongoDB
+	// connect to mongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	client, err := mongo.Connect(ctx, clientOptions)

@@ -5,17 +5,19 @@
 # Outdoorsight
 
 Outdoorsight is a web service dedicated to rock climbers.  
-You can add your favorite climbing spots, and their routes that you achieved or the next ones! 
-
+You can add your favourite climbing spots and their routes, whether you achieved them or plan on doing so!
 It is a CRUD and RESTful API, communicating through http.
 
 ## Setup
 
 Prerequisites
 
+- [go 1.14+](https://golang.org/doc/install)
 - Install [Docker](https://docs.docker.com/get-docker/)
 
-## Run the app
+## Users
+
+**Run the app**
 
     make run_outdoorsight 
 
@@ -23,7 +25,8 @@ Please note if you already ran this command, launch:
     
     make stop_outdoorsight
 
-## Install
+
+## Admins
 
 Build the app docker image
 
@@ -41,7 +44,7 @@ Run mongoDB image
 
 Connect to mongo docker
 
-    18:48 $ docker exec -it mongoDB  bash
+    $ docker exec -it mongoDB  bash
 
 Connect to mongo
 
@@ -75,7 +78,7 @@ If you want to check more infos, please refer to [mongoDB documentation](https:/
 | GetSpot     | Retrieve the given spot with its details          |
 | UpdateSpot  | Update the given spot with the furnished details  |
 | DeleteSpot  | Delete a spot from your list of spots             |
-| GetAPIDoc   | Get the API documention in Redoc format           |
+| GetAPIDoc   | Get the API documentation in Redoc format           |
 
 
 So you can retrieve the API documentation in Redoc format through this URL:
@@ -90,11 +93,10 @@ It can be modified and regenerated thanks to:
 
 ## Source code organization
 
-The outdoorsight project tree
+The Outdoorsight project tree
 
 ```bash
 .
-├── bin
 ├── CHANGELOG.md
 ├── cmd
 │   └── main.go
@@ -127,7 +129,7 @@ The outdoorsight project tree
 
 **Mongo**
 * Add mocks on DB to mock it
-* Add a copy of session each time an endpoint is called instead of creating a new connexion
+* Add a copy of session each time an endpoint is called instead of creating a new connection
 * Add indexes on spots to have a more efficient on data access
 * Create a new collection `routes` to store all the routes and develop CRUD endpoints on `route` resource
 
@@ -140,7 +142,7 @@ The outdoorsight project tree
 
 **General**
 * Have a persistent database 
-* I would like to have a user system and create a website on which everybody could register, save its spots and rock climb achievements!
+* I would like to have a user system and create a website on which everybody could register, save their spots and rock climb achievements!
 
 ## External resources that were useful
 

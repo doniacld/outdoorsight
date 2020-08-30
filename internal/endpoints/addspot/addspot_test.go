@@ -22,7 +22,7 @@ func TestAddSpot(t *testing.T) {
 	ctx := context.Background()
 
 	// NewClient creates the OutdoorsightDB structure
-	func New() CoreDB {
+	func New() DB {
 		mongoDB := core.NewDB()
 		osDB := OutdoorsightDB{mongoDB}
 	}

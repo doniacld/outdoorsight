@@ -17,7 +17,7 @@ import (
 func AddSpot(ctx context.Context, request AddSpotRequest) (AddSpotResponse, *errors.OsError) {
 	spotDetailsDB, err := convertToSpotDetailsDB(request)
 	if err != nil {
-		return AddSpotResponse{}, errors.Wrap(err, "error while converting to spotDetails CoreDB structure")
+		return AddSpotResponse{}, errors.Wrap(err, "error while converting to spotDetails DB structure")
 	}
 
 	osDB := db.New()
@@ -40,12 +40,12 @@ func AddSpot(ctx context.Context, request AddSpotRequest) (AddSpotResponse, *err
 		return AddSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot %s details", spotDetails.Name))
 	}
 
-	// convert CoreDB response into addSpotResponse structure
+	// convert DB response into addSpotResponse structure
 	response := AddSpotResponse(spotDetails)
 	return response, nil
 }
 
-// convertToSpotDetailsDB converts the request to spotDetails CoreDB structure
+// convertToSpotDetailsDB converts the request to spotDetails DB structure
 func convertToSpotDetailsDB(request AddSpotRequest) (db.SpotDetails, *errors.OsError) {
 	data, err := json.Marshal(&request)
 	if err != nil {

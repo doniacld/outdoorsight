@@ -34,8 +34,8 @@ paths:
           description: Spot details
           schema:
             $ref: 'definitions/spots.yml#/spot'
-        404:
-          $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+        409:
+          $ref: 'definitions/errors.yml#/standard409ErrorResponse'
         500:
           $ref: 'definitions/errors.yml#/standard500ErrorResponse'
   /spots/{spotName}:
@@ -77,7 +77,7 @@ paths:
           $ref: 'definitions/errors.yml#/standard500ErrorResponse'
     put:
       summary: Update a spot
-      description: Updates a existing spot in the database
+      description: Updates a existing spot in the database. It could be renamed.
       tags:
         - Spot
       parameters:

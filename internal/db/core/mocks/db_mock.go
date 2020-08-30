@@ -12,7 +12,7 @@ import (
 	reflect "reflect"
 )
 
-// MockDB is a mock of CoreDB interface
+// MockDB is a mock of DB interface
 type MockDB struct {
 	ctrl     *gomock.Controller
 	recorder *MockDBMockRecorder

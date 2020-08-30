@@ -24,7 +24,7 @@ func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotRespo
 		return UpdateSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' not found", request.Name))
 	}
 
-	// convert the request into spotDetails CoreDB structure
+	// convert the request into spotDetails DB structure
 	spotDetailsDB, err := convertToSpotDetailsDB(request)
 	if err != nil {
 		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to update spot %s", request.Name))
@@ -48,7 +48,7 @@ func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotRespo
 	return response, nil
 }
 
-// convertToSpotDetailsDB converts the request to spotDetails CoreDB structure
+// convertToSpotDetailsDB converts the request to spotDetails DB structure
 func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, *errors.OsError) {
 	data, err := json.Marshal(&request)
 	if err != nil {

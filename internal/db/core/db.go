@@ -9,20 +9,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// CoreDB is the core database interface
-type CoreDB interface {
+// DB is the core database interface
+type DB interface {
 	Insert(ctx context.Context, collection string, doc interface{}) *errors.OsError
 	Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, *errors.OsError)
 	Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) *errors.OsError
 	Delete(ctx context.Context, collection string, filter map[string]interface{}) *errors.OsError
 }
 
-type MongoDB struct {
-	Client *mongo.Client
+//
+type mongoDB struct {
+	client *mongo.Client
 }
 
-// NewDB creates a new instance of MongoDB structure
-func NewDB() CoreDB {
-	m := MongoDB{}
-	return &MongoDB{Client: m.NewClient()}
+// NewDB returns an object implementing DB
+func NewDB() DB {
+	m := mongoDB{}
+	return &mongoDB{client: m.NewClient()}
 }
