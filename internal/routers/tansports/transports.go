@@ -2,8 +2,6 @@ package transports
 
 import (
 	"encoding/json"
-	"github.com/doniacld/outdoorsight/internal/errors"
-
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
@@ -13,17 +11,18 @@ import (
 	"github.com/doniacld/outdoorsight/internal/endpoints/getapidoc"
 	"github.com/doniacld/outdoorsight/internal/endpoints/getspot"
 	"github.com/doniacld/outdoorsight/internal/endpoints/updatespot"
+	"github.com/doniacld/outdoorsight/internal/errors"
 
 	"github.com/gorilla/mux"
 )
 
 // DecodeRequestGetAPIDoc decodes the request into the internal structure
-func DecodeRequestGetAPIDoc(_ *http.Request) (getapidoc.GetAPIDocRequest, *errors.OsError) {
+func DecodeRequestGetAPIDoc(_ *http.Request) (getapidoc.GetAPIDocRequest, *errors.ODSError) {
 	return getapidoc.GetAPIDocRequest{}, nil
 }
 
 // EncodeResponseGetAPIDoc encodes the response
-func EncodeResponseGetAPIDoc(w http.ResponseWriter, resp getapidoc.GetAPIDocResponse) *errors.OsError {
+func EncodeResponseGetAPIDoc(w http.ResponseWriter, resp getapidoc.GetAPIDocResponse) *errors.ODSError {
 	// set the response parameters
 	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeHTML)
 	w.WriteHeader(getapidoc.GetAPIDocMeta.SuccessCode())
@@ -35,7 +34,7 @@ func EncodeResponseGetAPIDoc(w http.ResponseWriter, resp getapidoc.GetAPIDocResp
 }
 
 // DecodeRequestAddSpot decodes the request into the internal structure
-func DecodeRequestAddSpot(r *http.Request) (addspot.AddSpotRequest, *errors.OsError) {
+func DecodeRequestAddSpot(r *http.Request) (addspot.AddSpotRequest, *errors.ODSError) {
 	// decode body
 	var addSpotRequest addspot.AddSpotRequest
 	if err := json.NewDecoder(r.Body).Decode(&addSpotRequest); err != nil {
@@ -45,13 +44,13 @@ func DecodeRequestAddSpot(r *http.Request) (addspot.AddSpotRequest, *errors.OsEr
 
 	// call validate request
 	if err := addSpotRequest.Validate(); err != nil {
-		return addspot.AddSpotRequest{}, errors.Wrap(err, "addSpotRequest is not valid")
+		return addspot.AddSpotRequest{}, err.Wrap("addSpotRequest is not valid")
 	}
 	return addSpotRequest, nil
 }
 
 // EncodeResponseAddSpot encodes the response into a JSON file
-func EncodeResponseAddSpot(w http.ResponseWriter, resp addspot.AddSpotResponse) *errors.OsError {
+func EncodeResponseAddSpot(w http.ResponseWriter, resp addspot.AddSpotResponse) *errors.ODSError {
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, "unable to encode addSpot response")
 	}
@@ -62,7 +61,7 @@ func EncodeResponseAddSpot(w http.ResponseWriter, resp addspot.AddSpotResponse) 
 }
 
 // DecodeRequestGetSpot decodes the request into the internal structure
-func DecodeRequestGetSpot(r *http.Request) (getspot.GetSpotRequest, *errors.OsError) {
+func DecodeRequestGetSpot(r *http.Request) (getspot.GetSpotRequest, *errors.ODSError) {
 	vars := mux.Vars(r)
 	spotName := vars[endpoints.ParamSpotName]
 
@@ -70,7 +69,7 @@ func DecodeRequestGetSpot(r *http.Request) (getspot.GetSpotRequest, *errors.OsEr
 }
 
 // EncodeResponseGetSpot encodes the response into a JSON file
-func EncodeResponseGetSpot(w http.ResponseWriter, resp getspot.GetSpotResponse) *errors.OsError {
+func EncodeResponseGetSpot(w http.ResponseWriter, resp getspot.GetSpotResponse) *errors.ODSError {
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusBadRequest, err, "unable to encode getSpot response")
 	}
@@ -81,7 +80,7 @@ func EncodeResponseGetSpot(w http.ResponseWriter, resp getspot.GetSpotResponse) 
 }
 
 // DecodeRequestDeleteSpot decodes the request into the internal structure
-func DecodeRequestDeleteSpot(r *http.Request) (deletespot.DeleteSpotRequest, *errors.OsError) {
+func DecodeRequestDeleteSpot(r *http.Request) (deletespot.DeleteSpotRequest, *errors.ODSError) {
 	vars := mux.Vars(r)
 	spotName := vars[endpoints.ParamSpotName]
 
@@ -89,32 +88,33 @@ func DecodeRequestDeleteSpot(r *http.Request) (deletespot.DeleteSpotRequest, *er
 }
 
 // EncodeResponseDeleteSpot encodes the response
-func EncodeResponseDeleteSpot(w http.ResponseWriter, _ deletespot.DeleteSpotResponse) *errors.OsError {
+func EncodeResponseDeleteSpot(w http.ResponseWriter, _ deletespot.DeleteSpotResponse) *errors.ODSError {
 	w.WriteHeader(deletespot.DeleteSpotMeta.SuccessCode())
 	return nil
 }
 
 // DecodeRequestUpdateSpot decodes the request into the internal structure
-func DecodeRequestUpdateSpot(r *http.Request) (updatespot.UpdateSpotRequest, *errors.OsError) {
+func DecodeRequestUpdateSpot(r *http.Request) (updatespot.UpdateSpotRequest, *errors.ODSError) {
 	var updateSpotRequest updatespot.UpdateSpotRequest
-
-	vars := mux.Vars(r)
-	updateSpotRequest.Name = vars[endpoints.ParamSpotName]
 
 	if err := json.NewDecoder(r.Body).Decode(&updateSpotRequest); err != nil {
 		return updatespot.UpdateSpotRequest{}, errors.NewFromError(http.StatusBadRequest, err, "unable to decode updateSpotRequest")
 	}
 	defer r.Body.Close()
 
+	// set the path parameter in the updateSpotRequest
+	vars := mux.Vars(r)
+	updateSpotRequest.Name = vars[endpoints.ParamSpotName]
+
 	// call validate request
 	if err := updateSpotRequest.Validate(); err != nil {
-		return updatespot.UpdateSpotRequest{}, errors.Wrap(err, "updateSpotRequest is not valid")
+		return updatespot.UpdateSpotRequest{}, err.Wrap("updateSpotRequest is not valid")
 	}
 	return updateSpotRequest, nil
 }
 
 // EncodeResponseUpdateSpot encodes the response into a JSON file
-func EncodeResponseUpdateSpot(w http.ResponseWriter, resp updatespot.UpdateSpotResponse) *errors.OsError {
+func EncodeResponseUpdateSpot(w http.ResponseWriter, resp updatespot.UpdateSpotResponse) *errors.ODSError {
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, "unable to encode updateSpot response")
 	}

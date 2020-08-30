@@ -11,45 +11,46 @@ import (
 )
 
 // UpdateSpot returns all the details about a given spot
-func UpdateSpot(ctx context.Context, request UpdateSpotRequest) (UpdateSpotResponse, *errors.OsError) {
-
-	osDB := db.New()
-
+func UpdateSpot(ctx context.Context, request UpdateSpotRequest, odsDB db.DB) (UpdateSpotResponse, *errors.ODSError) {
 	// call the database to get the details (a way to verify that we really added the data)
-	spotDetails, err := osDB.GetSpot(ctx, request.Name)
+	spotDetails, err := odsDB.GetSpot(ctx, request.Name)
 	if err != nil {
-		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot '%s' details", request.Name))
+		return UpdateSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("error whild calling getSpot DB for spot '%s'", request.Name))
 	}
-	if spotDetails.Name == "" {
-		return UpdateSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' not found", request.Name))
+
+	// if the spotDetails are empty, it means the endpoint does not exist
+	if spotDetails == nil {
+		return UpdateSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' does not exist", request.Name))
 	}
 
 	// convert the request into spotDetails DB structure
-	spotDetailsDB, err := convertToSpotDetailsDB(request)
-	if err != nil {
-		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to update spot %s", request.Name))
+	spotDetailsDB, er := convertToSpotDetailsDB(request)
+	if er != nil {
+		return UpdateSpotResponse{}, er.Wrap(fmt.Sprintf("unable to update spot %s", request.Name))
 	}
 
 	// update the spot in DB
-	if err := osDB.UpdateSpot(ctx, request.Name, spotDetailsDB); err != nil {
-		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to update spot %s", request.Name))
+	if _, _, err := odsDB.UpdateSpot(ctx, request.Name, spotDetailsDB); err != nil {
+		return UpdateSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to update spot %s", request.Name))
 	}
 
-	// get the updated spot name
-	if request.Name != spotDetailsDB.Name {
-		request.Name = spotDetailsDB.Name
-	}
-	spotDetails, err = osDB.GetSpot(ctx, request.Name)
+	// retrieve the updated details
+	spotDetails, err = odsDB.GetSpot(ctx, request.Name)
 	if err != nil {
-		return UpdateSpotResponse{}, errors.Wrap(err, fmt.Sprintf("unable to get spot %s", request.Name))
+		return UpdateSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to get spot '%s' after insertion", request.Name))
 	}
+	fmt.Println("<<<<<<",spotDetails, &spotDetails)
+	sd := *spotDetails
+	fmt.Println("<<<<<<",spotDetails, &spotDetails)
+	// convert the details into an update spot response
+	response := UpdateSpotResponse{Name: sd.Name, Routes: sd.Routes, Metadata: sd.Metadata}
 
-	response := UpdateSpotResponse(spotDetails)
 	return response, nil
 }
 
 // convertToSpotDetailsDB converts the request to spotDetails DB structure
-func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, *errors.OsError) {
+func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, *errors.ODSError) {
+	fmt.Println("convertToSpotDetails")
 	data, err := json.Marshal(&request)
 	if err != nil {
 		return db.SpotDetails{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("error while marshalling request '%q'", request))

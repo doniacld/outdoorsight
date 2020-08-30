@@ -116,7 +116,7 @@ The Outdoorsight project tree
 ```
 
 * cmd : contains the main
-* doc : contains the swagger API documentation in YAML
+* doc : contains the swagger API documentation in YAML and the generated html
 * internal/db : contains all db methods related
 * internal/endpointdef : contains the meta to define an endpoint
 * internal/endpoints : contains all the endpoints
@@ -128,7 +128,6 @@ The Outdoorsight project tree
 ## What's next ?
 
 **Mongo**
-* Add mocks on DB to mock it
 * Add a copy of session each time an endpoint is called instead of creating a new connection
 * Add indexes on spots to have a more efficient on data access
 * Create a new collection `routes` to store all the routes and develop CRUD endpoints on `route` resource

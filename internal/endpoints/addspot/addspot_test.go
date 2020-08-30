@@ -1,37 +1,19 @@
 package addspot
-/*
+
 import (
 	"context"
-	"github.com/doniacld/outdoorsight/internal/db"
-	"github.com/doniacld/outdoorsight/internal/db/core"
-	mock_core "github.com/doniacld/outdoorsight/internal/db/core/mocks"
-	mock_db "github.com/doniacld/outdoorsight/internal/db/mocks"
-	"github.com/golang/mock/gomock"
 	"testing"
 
+	mock_db "github.com/doniacld/outdoorsight/internal/db/mocks"
+
 	"github.com/doniacld/outdoorsight/internal/spot"
-
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-type mockDB struct {
-	*mock_core.MockDB
-}
 
 func TestAddSpot(t *testing.T) {
 	ctx := context.Background()
-
-	// NewClient creates the OutdoorsightDB structure
-	func New() DB {
-		mongoDB := core.NewDB()
-		osDB := OutdoorsightDB{mongoDB}
-	}
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockDB := mock_db.NewMockDB(ctrl)
-	osDB := db.New(core.MongoDB{})
 
 	tt := map[string]struct {
 		request     AddSpotRequest
@@ -53,15 +35,23 @@ func TestAddSpot(t *testing.T) {
 		},
 	}
 
+	// set database mock
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	odsDB := mock_db.NewMockDB(ctrl)
+
 	for n, tc := range tt {
 		t.Run(n, func(t *testing.T) {
-			mockDB.EXPECT().Find(ctx, gomock.Any(), gomock.Any()).Return(spot.Details{}, nil).Times(1)
-			mockDB.EXPECT().Insert(ctx, gomock.Any(), gomock.Any()).Return(gomock.Any(), nil).Times(1)
-			mockDB.EXPECT().Find(ctx, gomock.Any(), gomock.Any()).Return(spot.Details{}, nil).Times(1)
+			// set mocks calls
+			odsDB.EXPECT().GetSpot(ctx, gomock.Any()).Return(nil, nil).Times(1)
+			odsDB.EXPECT().AddSpot(ctx, gomock.Any()).Return(nil, nil).Times(1)
+			spotDetails := spot.Details(tc.request)
+			odsDB.EXPECT().GetSpot(ctx, gomock.Any()).Return(&spotDetails, nil).Times(1)
 
-			response, err := AddSpot(ctx, tc.request, osDB)
-
-			if tc.expectedErr == "" {
+			// make the call
+			response, err := AddSpot(ctx, tc.request, odsDB)
+			if tc.expectedErr != "" {
+				require.NotNil(t, err)
 				assert.Equal(t, tc.expectedErr, err.Message)
 			} else {
 				assert.Equal(t, tc.expectedRes, response)
@@ -69,4 +59,3 @@ func TestAddSpot(t *testing.T) {
 		})
 	}
 }
-*/

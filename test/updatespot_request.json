@@ -1,8 +1,23 @@
 {
   "routes": [
     {
+      "name": "AlineLaMaline",
+      "level": "5a",
+      "points": 7,
+      "information": "Not so easy"
+    },
+    {
       "name": "HenriLeChauve",
-      "information": "The 3rd move is pretty hard!"
+      "level": "6a+",
+      "points": 8
+    },
+    {
+      "name": "Fifi",
+      "level": "5c",
+      "points": 4
     }
-  ]
+  ],
+  "metadata": {
+    "info": "Park at the canoe spot"
+  }
 }

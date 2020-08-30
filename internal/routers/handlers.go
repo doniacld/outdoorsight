@@ -2,6 +2,7 @@ package routers
 
 import (
 	"context"
+	"github.com/doniacld/outdoorsight/internal/db"
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/endpoints/addspot"
@@ -18,21 +19,21 @@ func GetAPIDocHandler(w http.ResponseWriter, r *http.Request) {
 	// decode request
 	request, err := transports.DecodeRequestGetAPIDoc(r)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 
 	// call the endpoint
 	response, err := getapidoc.GetAPIDoc(request)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 
 	// encode the response
 	err = transports.EncodeResponseGetAPIDoc(w, response)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 }
@@ -44,45 +45,63 @@ func AddSpotHandler(w http.ResponseWriter, r *http.Request) {
 	// decode request
 	request, err := transports.DecodeRequestAddSpot(r)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
+		return
+	}
+
+	// create a new connection to database
+	odsDB, dbErr := db.New()
+	if dbErr != nil {
+		er := errors.NewFromError(http.StatusInternalServerError, err, "error while creating a new connection to the database")
+		er.HTTPError(w)
 		return
 	}
 
 	// call the endpoint
-	response, err := addspot.AddSpot(ctx, request)
+	response, err := addspot.AddSpot(ctx, request, odsDB)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 
 	// encode the response
 	err = transports.EncodeResponseAddSpot(w, response)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 }
 
 // GetSpotHandler is the handler of GetSpot endpoint
 func GetSpotHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.TODO()
+
 	// decode request
 	request, err := transports.DecodeRequestGetSpot(r)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
+		return
+	}
+
+	// create a new connection to database
+	odsDB, dbErr := db.New()
+	if dbErr != nil {
+		er := errors.NewFromError(http.StatusInternalServerError, err, "error while creating a new connection to the database")
+		er.HTTPError(w)
 		return
 	}
 
 	// call the endpoint
-	response, err := getspot.GetSpot(request)
+	response, err := getspot.GetSpot(ctx, request, odsDB)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 
 	// encode the response
 	err = transports.EncodeResponseGetSpot(w, response)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 }
@@ -90,24 +109,34 @@ func GetSpotHandler(w http.ResponseWriter, r *http.Request) {
 // DeleteSpotHandler is the handler of DeleteSpot
 // Idempotent endpoint, it will return its success code even the name is not found.
 func DeleteSpotHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.TODO()
+
 	// decode request
 	request, err := transports.DecodeRequestDeleteSpot(r)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
+		return
+	}
+
+	// create a new connection to database
+	odsDB, dbErr := db.New()
+	if dbErr != nil {
+		er := errors.NewFromError(http.StatusInternalServerError, err, "error while creating a new connection to the database")
+		er.HTTPError(w)
 		return
 	}
 
 	// call the endpoint
-	response, err := deletespot.DeleteSpot(context.TODO(), request)
+	response, err := deletespot.DeleteSpot(ctx, request, odsDB)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 
 	// encode the response
 	err = transports.EncodeResponseDeleteSpot(w, response)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 }
@@ -119,21 +148,29 @@ func UpdateSpotHandler(w http.ResponseWriter, r *http.Request) {
 	// decode request
 	request, err := transports.DecodeRequestUpdateSpot(r)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
+		return
+	}
+
+	// create a new connection to database
+	odsDB, dbErr := db.New()
+	if dbErr != nil {
+		er := errors.NewFromError(http.StatusInternalServerError, err, "error while creating a new connection to the database")
+		er.HTTPError(w)
 		return
 	}
 
 	// call the endpoint
-	response, err := updatespot.UpdateSpot(ctx, request)
+	response, err := updatespot.UpdateSpot(ctx, request, odsDB)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 
 	// encode the response
 	err = transports.EncodeResponseUpdateSpot(w, response)
 	if err != nil {
-		errors.HTTPError(w, err)
+		err.HTTPError(w)
 		return
 	}
 }

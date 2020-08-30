@@ -7,7 +7,6 @@ package mock_db
 import (
 	context "context"
 	db "github.com/doniacld/outdoorsight/internal/db"
-	errors "github.com/doniacld/outdoorsight/internal/errors"
 	spot "github.com/doniacld/outdoorsight/internal/spot"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -37,11 +36,12 @@ func (m *MockDB) EXPECT() *MockDBMockRecorder {
 }
 
 // AddSpot mocks base method
-func (m *MockDB) AddSpot(ctx context.Context, details db.SpotDetails) *errors.OsError {
+func (m *MockDB) AddSpot(ctx context.Context, details db.SpotDetails) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSpot", ctx, details)
-	ret0, _ := ret[0].(*errors.OsError)
-	return ret0
+	ret0, _ := ret[0].(interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AddSpot indicates an expected call of AddSpot
@@ -51,11 +51,11 @@ func (mr *MockDBMockRecorder) AddSpot(ctx, details interface{}) *gomock.Call {
 }
 
 // GetSpot mocks base method
-func (m *MockDB) GetSpot(ctx context.Context, spotName string) (spot.Details, *errors.OsError) {
+func (m *MockDB) GetSpot(ctx context.Context, spotName string) (*spot.Details, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSpot", ctx, spotName)
-	ret0, _ := ret[0].(spot.Details)
-	ret1, _ := ret[1].(*errors.OsError)
+	ret0, _ := ret[0].(*spot.Details)
+	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
@@ -65,30 +65,33 @@ func (mr *MockDBMockRecorder) GetSpot(ctx, spotName interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSpot", reflect.TypeOf((*MockDB)(nil).GetSpot), ctx, spotName)
 }
 
-// DeleteSpot mocks base method
-func (m *MockDB) DeleteSpot(ctx context.Context, spotName string) *errors.OsError {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteSpot", ctx, spotName)
-	ret0, _ := ret[0].(*errors.OsError)
-	return ret0
-}
-
-// DeleteSpot indicates an expected call of DeleteSpot
-func (mr *MockDBMockRecorder) DeleteSpot(ctx, spotName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSpot", reflect.TypeOf((*MockDB)(nil).DeleteSpot), ctx, spotName)
-}
-
 // UpdateSpot mocks base method
-func (m *MockDB) UpdateSpot(ctx context.Context, spotName string, update db.SpotDetails) *errors.OsError {
+func (m *MockDB) UpdateSpot(ctx context.Context, spotName string, update db.SpotDetails) (int64, int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSpot", ctx, spotName, update)
-	ret0, _ := ret[0].(*errors.OsError)
-	return ret0
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // UpdateSpot indicates an expected call of UpdateSpot
 func (mr *MockDBMockRecorder) UpdateSpot(ctx, spotName, update interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSpot", reflect.TypeOf((*MockDB)(nil).UpdateSpot), ctx, spotName, update)
+}
+
+// DeleteSpot mocks base method
+func (m *MockDB) DeleteSpot(ctx context.Context, spotName string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteSpot", ctx, spotName)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteSpot indicates an expected call of DeleteSpot
+func (mr *MockDBMockRecorder) DeleteSpot(ctx, spotName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSpot", reflect.TypeOf((*MockDB)(nil).DeleteSpot), ctx, spotName)
 }

@@ -3,12 +3,9 @@ package core
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"time"
 
-	"github.com/doniacld/outdoorsight/internal/errors"
-
-	pkgerrors "github.com/pkg/errors"
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,54 +17,63 @@ const (
 	outdoorsightDB = "outdoorsight"
 )
 
-// Insert creates a new document in DB
-func (m *mongoDB) Insert(ctx context.Context, collection string, doc interface{}) *errors.OsError {
-	c := m.client.Database(outdoorsightDB).Collection(collection)
-	if _, err := c.InsertOne(ctx, doc); err != nil {
-		return errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to insert document in collection %s", collection))
+// mongoDB holds the mongo client
+type mongoDB struct {
+	client *mongo.Client
+}
+
+// NewDB returns an object implementing DB
+func NewDB() (DB, error) {
+	m := mongoDB{}
+	client, err := m.newClient()
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to create a new mongo client")
 	}
-	return nil
+	return &mongoDB{client: client}, nil
+}
+
+// Insert creates a new document in DB
+func (m *mongoDB) Insert(ctx context.Context, collection string, doc interface{}) (interface{}, error) {
+	c := m.client.Database(outdoorsightDB).Collection(collection)
+	result, err := c.InsertOne(ctx, doc)
+	if err != nil {
+		return result.InsertedID, errors.Wrap(err, fmt.Sprintf("error while inserting document '%s' in collection '%s'", doc, collection))
+	}
+	return result.InsertedID, nil
 }
 
 // Find retrieves the cursor corresponding to the given filter
-func (m *mongoDB) Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, *errors.OsError) {
+func (m *mongoDB) Find(ctx context.Context, collection string, filter map[string]interface{}) (*mongo.Cursor, error) {
 	c := m.client.Database(outdoorsightDB).Collection(collection)
 	cursor, err := c.Find(ctx, filter)
 	if err != nil {
-		return nil, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to find document in collection %s", collection))
+		return nil, errors.Wrap(err, fmt.Sprintf("unable to find document in collection %s", collection))
 	}
 	return cursor, nil
 }
 
 // Update updates an existing document
-func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) *errors.OsError {
+func (m *mongoDB) Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) (int64, int64, error) {
 	c := m.client.Database(outdoorsightDB).Collection(collection)
 	res, err := c.UpdateOne(ctx, filter, update)
 	if err != nil {
-		return errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to update document in collection %s", collection))
+		return int64(0), int64(0), errors.Wrap(err, fmt.Sprintf("unable to update document in collection %s", collection))
 	}
-	// element not found
-	if res.MatchedCount < 1 {
-		return errors.New(http.StatusNotFound, fmt.Sprintf("unable to find %s in %s", filter, collection))
-	}
-	// element is not modified
-	if res.ModifiedCount < 1 {
-		return errors.New(http.StatusInternalServerError, fmt.Sprintf("error while updating %s in %s", filter, collection))
-	}
-	return nil
+	return res.MatchedCount, res.ModifiedCount, nil
 }
 
 // Delete deletes a document
-func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) *errors.OsError {
+func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[string]interface{}) (int64, error) {
 	c := m.client.Database(outdoorsightDB).Collection(collection)
-	if _, err := c.DeleteOne(ctx, filter); err != nil {
-		return errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to delete document in collection %s", collection))
+	res, err := c.DeleteOne(ctx, filter)
+	if err != nil {
+		return int64(0), errors.Wrap(err, fmt.Sprintf("unable to delete document in collection %s", collection))
 	}
-	return nil
+	return res.DeletedCount, nil
 }
 
-// NewClient creates the connexion to the database and returns a mongo client
-func (m *mongoDB) NewClient() *mongo.Client {
+// newClient creates the connection to the database and returns a mongo client
+func (m *mongoDB) newClient() (*mongo.Client, error) {
 	// set client options
 	clientOptions := options.Client().ApplyURI(mongoURI)
 	// connect to mongoDB
@@ -75,8 +81,8 @@ func (m *mongoDB) NewClient() *mongo.Client {
 	defer cancel()
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		panic(pkgerrors.New(fmt.Sprintf("unable to connect to mongo %q", &clientOptions)))
+		return nil, errors.New(fmt.Sprintf("unable to connect to mongo %+v", &clientOptions))
 	}
 
-	return client
+	return client, nil
 }

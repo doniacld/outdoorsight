@@ -12,7 +12,7 @@ const (
 )
 
 // GetAPIDoc returns the documentation on the API
-func GetAPIDoc(_ GetAPIDocRequest) (GetAPIDocResponse, *errors.OsError) {
+func GetAPIDoc(_ GetAPIDocRequest) (GetAPIDocResponse, *errors.ODSError) {
 	file, err := ioutil.ReadFile(docAPIFile)
 	if err != nil {
 		return GetAPIDocResponse{}, errors.NewFromError(http.StatusInternalServerError, err, "unable to read doc api file")

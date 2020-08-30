@@ -1,12 +1,13 @@
 package endpointdef
 
+// TODO DONIA might be elsewhere ?
 const (
 	ContentType  = "Content-Type"
 	MimeTypeJSON = "application/json"
 	MimeTypeHTML = "text/html"
 )
 
-// Meta hols endpoint metadata
+// Meta defines endpoint metadata
 type Meta interface {
 	TraceName() string
 	Path() string
@@ -14,7 +15,7 @@ type Meta interface {
 	SuccessCode() int
 }
 
-// NewClient creates a new endpoint structure
+// New creates a new endpoint structure
 func New(traceName, path, verb string, code int) Meta {
 	e := endpoint{
 		traceName,
