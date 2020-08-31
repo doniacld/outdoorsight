@@ -24,8 +24,8 @@ func DecodeRequestGetAPIDoc(_ *http.Request) (getapidoc.GetAPIDocRequest, *error
 // EncodeResponseGetAPIDoc encodes the response
 func EncodeResponseGetAPIDoc(w http.ResponseWriter, resp getapidoc.GetAPIDocResponse) *errors.ODSError {
 	// set the response parameters
-	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeHTML)
 	w.WriteHeader(getapidoc.GetAPIDocMeta.SuccessCode())
+	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeHTML)
 
 	if _, err := w.Write(resp); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, "unable to encode getAPIDoc response")
@@ -51,12 +51,13 @@ func DecodeRequestAddSpot(r *http.Request) (addspot.AddSpotRequest, *errors.ODSE
 
 // EncodeResponseAddSpot encodes the response into a JSON file
 func EncodeResponseAddSpot(w http.ResponseWriter, resp addspot.AddSpotResponse) *errors.ODSError {
+	w.WriteHeader(addspot.AddSpotMeta.SuccessCode())
+	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
+
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, "unable to encode addSpot response")
 	}
 
-	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
-	w.WriteHeader(addspot.AddSpotMeta.SuccessCode())
 	return nil
 }
 
@@ -70,12 +71,13 @@ func DecodeRequestGetSpot(r *http.Request) (getspot.GetSpotRequest, *errors.ODSE
 
 // EncodeResponseGetSpot encodes the response into a JSON file
 func EncodeResponseGetSpot(w http.ResponseWriter, resp getspot.GetSpotResponse) *errors.ODSError {
+	w.WriteHeader(getspot.GetSpotMeta.SuccessCode())
+	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
+
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusBadRequest, err, "unable to encode getSpot response")
 	}
 
-	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
-	w.WriteHeader(getspot.GetSpotMeta.SuccessCode())
 	return nil
 }
 
@@ -115,10 +117,11 @@ func DecodeRequestUpdateSpot(r *http.Request) (updatespot.UpdateSpotRequest, *er
 
 // EncodeResponseUpdateSpot encodes the response into a JSON file
 func EncodeResponseUpdateSpot(w http.ResponseWriter, resp updatespot.UpdateSpotResponse) *errors.ODSError {
+	w.WriteHeader(updatespot.UpdateSpotMeta.SuccessCode())
+	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
+
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, "unable to encode updateSpot response")
 	}
-	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
-	w.WriteHeader(updatespot.UpdateSpotMeta.SuccessCode())
 	return nil
 }

@@ -47,5 +47,5 @@ echo "------------------------------------------"
 
 # Delete a spot that does not exist
 echo "Deleting a spot that does not exist"
-echo "curl -v -X DELETE http://localhost:8080/spots/LesSurplombs"
-curl -v -X DELETE http://localhost:8080/spots/LesSurplombs
+echo "curl -v -X DELETE http://localhost:8080/spots/dummySpot"
+curl -v -X DELETE http://localhost:8080/spots/dummySpot

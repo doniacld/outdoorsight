@@ -39,9 +39,7 @@ func UpdateSpot(ctx context.Context, request UpdateSpotRequest, odsDB db.DB) (Up
 	if err != nil {
 		return UpdateSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to get spot '%s' after insertion", request.Name))
 	}
-	fmt.Println("<<<<<<",spotDetails, &spotDetails)
 	sd := *spotDetails
-	fmt.Println("<<<<<<",spotDetails, &spotDetails)
 	// convert the details into an update spot response
 	response := UpdateSpotResponse{Name: sd.Name, Routes: sd.Routes, Metadata: sd.Metadata}
 
@@ -50,7 +48,6 @@ func UpdateSpot(ctx context.Context, request UpdateSpotRequest, odsDB db.DB) (Up
 
 // convertToSpotDetailsDB converts the request to spotDetails DB structure
 func convertToSpotDetailsDB(request UpdateSpotRequest) (db.SpotDetails, *errors.ODSError) {
-	fmt.Println("convertToSpotDetails")
 	data, err := json.Marshal(&request)
 	if err != nil {
 		return db.SpotDetails{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("error while marshalling request '%q'", request))

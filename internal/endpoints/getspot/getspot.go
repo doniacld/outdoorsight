@@ -18,7 +18,6 @@ func GetSpot(ctx context.Context, request GetSpotRequest, odsDB db.DB) (GetSpotR
 	}
 	// GetSpot from DB return an empty pointer if the spot is not found
 	if spotDetails == nil {
-		fmt.Printf("spot '%s' does not exist", request.SpotName)
 		return GetSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' does not exist", request.SpotName))
 	}
 

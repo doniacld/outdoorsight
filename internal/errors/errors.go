@@ -33,10 +33,11 @@ func (err *ODSError) Wrap(message string) *ODSError {
 
 // HTTPError encodes the http error into a JSON file
 func (err *ODSError) HTTPError(w http.ResponseWriter) {
+	// write header should be done first to be taken into account
+	w.WriteHeader(err.HTTPCode)
+	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
+
 	if jsonErr := json.NewEncoder(w).Encode(&err); jsonErr != nil {
 		err.Message = jsonErr.Error()
 	}
-
-	w.Header().Set(endpointdef.ContentType, endpointdef.MimeTypeJSON)
-	w.WriteHeader(err.HTTPCode)
 }

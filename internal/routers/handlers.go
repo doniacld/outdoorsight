@@ -2,6 +2,7 @@ package routers
 
 import (
 	"context"
+	"fmt"
 	"github.com/doniacld/outdoorsight/internal/db"
 	"net/http"
 
@@ -22,17 +23,14 @@ func GetAPIDocHandler(w http.ResponseWriter, r *http.Request) {
 		err.HTTPError(w)
 		return
 	}
-
 	// call the endpoint
 	response, err := getapidoc.GetAPIDoc(request)
 	if err != nil {
 		err.HTTPError(w)
 		return
 	}
-
 	// encode the response
-	err = transports.EncodeResponseGetAPIDoc(w, response)
-	if err != nil {
+	if err := transports.EncodeResponseGetAPIDoc(w, response); err != nil {
 		err.HTTPError(w)
 		return
 	}
@@ -94,7 +92,9 @@ func GetSpotHandler(w http.ResponseWriter, r *http.Request) {
 	// call the endpoint
 	response, err := getspot.GetSpot(ctx, request, odsDB)
 	if err != nil {
+		fmt.Print("<<<<<<< wwww    ",err.HTTPCode, err.Message)
 		err.HTTPError(w)
+		w.WriteHeader(err.HTTPCode)
 		return
 	}
 
