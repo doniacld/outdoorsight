@@ -33,7 +33,7 @@ func (ods *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (*spot.
 
 	// check if cursor is empty, if yes returns an empty spot.Details
 	if cursor.Next(ctx) == false {
-		log.Print("enter is cursor next is false")
+		log.Print("spotName is not found")
 		return nil, nil
 	}
 	log.Printf("retrieved cursor from database '%v'", cursor)
