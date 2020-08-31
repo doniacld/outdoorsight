@@ -3,8 +3,9 @@ package db
 import (
 	"context"
 	"fmt"
-	"github.com/doniacld/outdoorsight/internal/spot"
 	"log"
+
+	"github.com/doniacld/outdoorsight/internal/spot"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,7 +15,7 @@ const (
 	spotsCollection = "spots"
 )
 
-// AddSpot adds a spot with all its details in database
+// AddSpot inserts a spot with all its details in database
 func (ods *OutdoorsightDB) AddSpot(ctx context.Context, details SpotDetails) (interface{}, error) {
 	res, err := ods.Insert(ctx, spotsCollection, details)
 	if err != nil {
@@ -37,23 +38,26 @@ func (ods *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (*spot.
 		return nil, nil
 	}
 	log.Printf("retrieved cursor from database '%v'", cursor)
+
 	// convert the result which is a cursor into a spot.Details structure
 	spotDetails := spot.Details{}
 	if err := cursor.Decode(&spotDetails); err != nil {
 		return nil, errors.Wrap(err, "unable to decode cursor")
 	}
 	log.Printf("retrieved spotDetails from database '%v'", &spotDetails)
+
 	return &spotDetails, nil
 }
 
 // UpdateSpot updates a spot in database
 func (ods *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd SpotDetails) (int64, int64, error) {
-	fmt.Println("spot details", sd)
 	update := bson.D{{"$set", sd}}
 	matchedCount, modifiedCount, err := ods.Update(ctx, spotsCollection, spotNameFilter(spotName), update)
 	if err != nil {
 		return 0, 0, errors.Wrap(err, fmt.Sprintf("unable to update spot %s in DB", spotName))
 	}
+	log.Printf("updated spot '%s, matchecCount: '%v', '%v'", spotName, matchedCount, modifiedCount)
+
 	return matchedCount, modifiedCount, nil
 }
 
@@ -63,6 +67,8 @@ func (ods *OutdoorsightDB) DeleteSpot(ctx context.Context, spotName string) (int
 	if err != nil {
 		return 0, errors.Wrap(err, fmt.Sprintf("unable to delete spot %s from DB", spotName))
 	}
+	log.Printf("updates spot '%s, deletedCount: '%v'", spotName, deletedCount)
+
 	return deletedCount, nil
 }
 

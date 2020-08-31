@@ -16,9 +16,9 @@ func TestAddSpot(t *testing.T) {
 	ctx := context.Background()
 
 	tt := map[string]struct {
-		request     AddSpotRequest
-		expectedRes AddSpotResponse
-		expectedErr string
+		request         AddSpotRequest
+		expectedRes     AddSpotResponse
+		expectedErr     string
 	}{
 		"nominal case": {
 			request: AddSpotRequest{

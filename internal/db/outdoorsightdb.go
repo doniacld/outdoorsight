@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"log"
 
 	"github.com/doniacld/outdoorsight/internal/db/core"
 	"github.com/doniacld/outdoorsight/internal/spot"
@@ -24,12 +25,13 @@ type OutdoorsightDB struct {
 	core.DB
 }
 
-// newClient creates the OutdoorsightDB structure
+// New creates the DB interface
 func New() (DB, error) {
 	coreDB, err := core.NewDB()
 	if err != nil {
 		errors.Wrap(err, "error while creating a new instance of DB")
 	}
 	osDB := OutdoorsightDB{coreDB}
+	log.Print("create a new instance of DB")
 	return &osDB, nil
 }

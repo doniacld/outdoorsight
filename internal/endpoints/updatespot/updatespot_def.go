@@ -26,7 +26,7 @@ type UpdateSpotResponse spot.Details
 func (request UpdateSpotRequest) Validate() *errors.ODSError {
 	r := spot.Details(request)
 	if err := r.Validate(); err != nil {
-		return errors.New(http.StatusBadRequest, "error while validating updateSpot request")
+		return errors.NewFromError(http.StatusBadRequest, err, "error while validating updateSpot request")
 	}
 	return nil
 }

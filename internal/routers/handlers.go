@@ -2,7 +2,6 @@ package routers
 
 import (
 	"context"
-	"fmt"
 	"github.com/doniacld/outdoorsight/internal/db"
 	"net/http"
 
@@ -92,7 +91,6 @@ func GetSpotHandler(w http.ResponseWriter, r *http.Request) {
 	// call the endpoint
 	response, err := getspot.GetSpot(ctx, request, odsDB)
 	if err != nil {
-		fmt.Print("<<<<<<< wwww    ",err.HTTPCode, err.Message)
 		err.HTTPError(w)
 		w.WriteHeader(err.HTTPCode)
 		return
@@ -143,7 +141,7 @@ func DeleteSpotHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateSpotHandler returns all the details about a given spot
 func UpdateSpotHandler(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
+	ctx := context.TODO()
 
 	// decode request
 	request, err := transports.DecodeRequestUpdateSpot(r)

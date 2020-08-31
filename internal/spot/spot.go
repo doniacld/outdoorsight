@@ -41,6 +41,11 @@ func NewRoute(name string, level string, points int, information string) Route {
 // Validate checks that a spot name does not have a space
 func (d Details) Validate() error {
 	// spot name should not contain spaces
+	if len(d.Name) == 0 {
+		return errors.New("spot name field is empty")
+	}
+
+	// spot name should not contain spaces
 	if containSpace(d.Name) {
 		return errors.New(fmt.Sprintf("spot name '%s' contains at least one space", d.Name))
 	}

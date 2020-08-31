@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/doniacld/outdoorsight/internal/errors"
+	"log"
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/db"
@@ -18,8 +19,10 @@ func GetSpot(ctx context.Context, request GetSpotRequest, odsDB db.DB) (GetSpotR
 	}
 	// GetSpot from DB return an empty pointer if the spot is not found
 	if spotDetails == nil {
+		log.Printf("spot '%s' is not found", request.SpotName)
 		return GetSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' does not exist", request.SpotName))
 	}
+	log.Printf("retrieved spotDetails for '%s'", request.SpotName)
 
 	// convert the spot.Details to the response
 	response := GetSpotResponse(*spotDetails)

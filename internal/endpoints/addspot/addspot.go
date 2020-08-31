@@ -42,11 +42,11 @@ func AddSpot(ctx context.Context, request AddSpotRequest, odsDB db.DB) (AddSpotR
 	if er != nil {
 		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to get spot %s details", request.Name))
 	}
-	log.Printf("retrieved '%q' &&& '%q'", spotDetails, &spotDetails)
+	log.Printf("retrieved '%q' &&& '%p'", spotDetails, &spotDetails)
 
 	// convert DB response into addSpotResponse structure
 	response := AddSpotResponse(*spotDetails)
-	log.Printf("spotDetails convert to AddSpotResponse '%q', '%q'", &spotDetails, AddSpotResponse(*spotDetails))
+	log.Printf("spotDetails convert to AddSpotResponse '%p', '%q'", &spotDetails, AddSpotResponse(*spotDetails))
 	return response, nil
 }
 
@@ -62,6 +62,6 @@ func convertToSpotDetailsDB(request AddSpotRequest) (db.SpotDetails, *errors.ODS
 		// if err := bson.Unmarshal(data, &spotDetailsDB); err != nil {
 		return db.SpotDetails{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("error while unmarshalling spotDetailsDB from request '%q'", request))
 	}
-	log.Printf("convert addSpotRequest to spotDetailsDB: %q, %T", spotDetailsDB, spotDetailsDB)
+	log.Printf("addSpot request is converted to spotDetails db format for '%s'", request.Name)
 	return spotDetailsDB, nil
 }

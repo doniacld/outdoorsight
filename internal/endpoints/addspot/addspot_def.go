@@ -1,10 +1,10 @@
 package addspot
 
 import (
-	"github.com/doniacld/outdoorsight/internal/errors"
 	"net/http"
 
 	"github.com/doniacld/outdoorsight/internal/endpointdef"
+	"github.com/doniacld/outdoorsight/internal/errors"
 	"github.com/doniacld/outdoorsight/internal/spot"
 )
 
@@ -25,7 +25,7 @@ type AddSpotResponse spot.Details
 func (request AddSpotRequest) Validate() *errors.ODSError {
 	r := spot.Details(request)
 	if err := r.Validate(); err != nil {
-		return errors.New(http.StatusBadRequest, "error while validating addSpot request")
+		return errors.NewFromError(http.StatusBadRequest, err, "error while validating addSpot request")
 	}
 	return nil
 }

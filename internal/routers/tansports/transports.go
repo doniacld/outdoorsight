@@ -57,7 +57,6 @@ func EncodeResponseAddSpot(w http.ResponseWriter, resp addspot.AddSpotResponse) 
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		return errors.NewFromError(http.StatusInternalServerError, err, "unable to encode addSpot response")
 	}
-
 	return nil
 }
 
