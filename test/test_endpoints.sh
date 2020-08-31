@@ -1,8 +1,11 @@
 #!/bin/bash
 
+export ODS_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight)
+
+
 # Add spot
 echo "Adding spot to database"
-curl -v -X POST http://localhost:8080/spots -d@test/addspot_request.json
+curl -v -X POST http://$(ODS_ADDRESS):8080/spots -d@test/addspot_request.json
 
 echo "------------------------------------------"
 

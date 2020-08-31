@@ -29,7 +29,7 @@ type OutdoorsightDB struct {
 func New() (DB, error) {
 	coreDB, err := core.NewDB()
 	if err != nil {
-		errors.Wrap(err, "error while creating a new instance of DB")
+		return nil, errors.Wrap(err, "error while creating a new instance of DB")
 	}
 	osDB := OutdoorsightDB{coreDB}
 	log.Print("create a new instance of DB")

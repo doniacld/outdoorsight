@@ -14,3 +14,4 @@ type DB interface {
 	Update(ctx context.Context, collection string, filter map[string]interface{}, update bson.D) (int64, int64, error)
 	Delete(ctx context.Context, collection string, filter map[string]interface{}) (int64, error)
 }
+

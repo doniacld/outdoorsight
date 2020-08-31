@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/pkg/errors"
@@ -13,7 +14,7 @@ import (
 
 const (
 	//TODO DONIA pass this URI as an argument
-	mongoURI       = "mongodb://172.17.0.2:27017"
+	//mongoURI       = "mongodb://127.0.0.1:27017"
 	outdoorsightDB = "outdoorsight"
 )
 
@@ -75,7 +76,12 @@ func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[stri
 // newClient creates the connection to the database and returns a mongo client
 func (m *mongoDB) newClient() (*mongo.Client, error) {
 	// set client options
+	mongoAddress := os.Getenv("mongo_address")
+	mongoURI := "mongodb://" + mongoAddress
+	fmt.Println("<<<<<<<<<<<<<<<<", mongoAddress)
+	fmt.Println("<<<<<<<<<<<<<<<<", mongoURI)
 	clientOptions := options.Client().ApplyURI(mongoURI)
+
 	// connect to mongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()

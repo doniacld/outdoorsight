@@ -23,7 +23,7 @@ func AddSpot(ctx context.Context, request AddSpotRequest, odsDB db.DB) (AddSpotR
 	// call the database to get the details (a way to verify that we really added the data)
 	spotDetails, er := odsDB.GetSpot(ctx, spotDetailsDB.Name)
 	if er != nil {
-		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to check for an already existing spot details with name '%s'", request.Name))
+		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, er, fmt.Sprintf("unable to check for an already existing spot details with name '%s'", request.Name))
 	}
 
 	// if spotDetails is not empty it means the spot already exists in database

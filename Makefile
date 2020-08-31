@@ -20,6 +20,9 @@ DOCKERBBUILD=$(DOCKERCMD) build
 DOCKERRUN=$(DOCKERCMD) run
 DOCKERSTOP=$(DOCKERCMD) stop
 DOCKERRM=$(DOCKERCMD) rm
+DOCKERINSPECT=$(DOCKERCMD) inspect
+DOCKERNETWORK=$(DOCKERCMD) network
+
 # Targets
 tidy:
 	$(GOMOD) tidy
@@ -39,11 +42,12 @@ clean_cache:
 docker_build:
 		$(DOCKERBBUILD) -t outdoorsight .
 docker_run:
-		$(DOCKERRUN) --net=host -p 8080:8080 outdoorsight
+		$(DOCKERRUN) --net=host outdoorsight
 docker_run_link:
 		$(DOCKERRUN) -p 8080:8080 --name outdoorsight --link=mongoDB:database outdoorsight
 docker_run_mongo:
 		cd misc/mongo
+		#$(DOCKERRUN) -it --network=host --rm mongo mongo --host 127.0.0.1 test
 		$(DOCKERRUN) -d --name mongoDB mongo
 render_doc:
 		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml
@@ -55,7 +59,20 @@ run_outdoorsight:
 		$(MAKE) docker_run_link
 stop_outdoorsight:
 		$(DOCKERSTOP) outdoorsight mongoDB
+		$(DOCKERNETWORK) rm ods-network
 		$(DOCKERRM) outdoorsight mongoDB
+
+try_run:
+		$(MAKE) build
+		$(MAKE) docker_build
+		$(DOCKERNETWORK) create ods-network
+		$(DOCKERRUN) -dit --name mongoDB --network ods-network mongo
+		export MONGO_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongoDB)
+		$(DOCKERRUN) -d -e mongo_address=$MONGO_ADDRESS --network ods-network --name outdoorsight outdoorsight
+		export ODS_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight)
+
+
+
 help:
 	@echo "Compilation, image build, documentation build of Outdoorsight app"
 	@echo "tidy                : Update dependencies (go mod tidy)"

@@ -49,7 +49,7 @@ func AddSpotHandler(w http.ResponseWriter, r *http.Request) {
 	// create a new connection to database
 	odsDB, dbErr := db.New()
 	if dbErr != nil {
-		er := errors.NewFromError(http.StatusInternalServerError, err, "error while creating a new connection to the database")
+		er := errors.NewFromError(http.StatusInternalServerError, dbErr, "error while creating a new connection to the database")
 		er.HTTPError(w)
 		return
 	}
