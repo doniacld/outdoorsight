@@ -52,7 +52,7 @@ run_outdoorsight:
 		$(MAKE) render_doc
 		$(MAKE) docker_build
 		$(MAKE) docker_run_mongo
-		$(MAKE) docker_run
+		$(MAKE) docker_run_link
 stop_outdoorsight:
 		$(DOCKERSTOP) outdoorsight mongoDB
 		$(DOCKERRM) outdoorsight mongoDB

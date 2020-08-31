@@ -23,26 +23,30 @@ func AddSpot(ctx context.Context, request AddSpotRequest, odsDB db.DB) (AddSpotR
 	// call the database to get the details (a way to verify that we really added the data)
 	spotDetails, er := odsDB.GetSpot(ctx, spotDetailsDB.Name)
 	if er != nil {
-		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to check for an already existing spot details with name '%s'", spotDetails.Name))
+		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to check for an already existing spot details with name '%s'", request.Name))
 	}
 
 	// if spotDetails is not empty it means the spot already exists in database
-	if spotDetails == nil {
-		return AddSpotResponse{}, errors.New(http.StatusConflict, fmt.Sprintf("spot '%s' does not exists in database", spotDetails.Name))
+	if spotDetails != nil {
+		log.Printf("retrieved spotDetails not empty %q", spotDetails)
+		return AddSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' already exists in database", spotDetails.Name))
 	}
-
 	// insert spot in database
 	if _, err := odsDB.AddSpot(ctx, spotDetailsDB); err != nil {
 		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to add spot %s", request.Name))
 	}
+	log.Printf("spot '%s' is inserted in DB", request.Name)
+
 	// call the database to get the details (a way to verify that we really added the data)
-	spotDetails, er = odsDB.GetSpot(ctx, spotDetailsDB.Name)
+	spotDetails, er = odsDB.GetSpot(ctx, request.Name)
 	if er != nil {
-		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to get spot %s details", spotDetails.Name))
+		return AddSpotResponse{}, errors.NewFromError(http.StatusInternalServerError, err, fmt.Sprintf("unable to get spot %s details", request.Name))
 	}
+	log.Printf("retrieved '%q' &&& '%q'", spotDetails, &spotDetails)
 
 	// convert DB response into addSpotResponse structure
 	response := AddSpotResponse(*spotDetails)
+	log.Printf("spotDetails convert to AddSpotResponse '%q', '%q'", &spotDetails, AddSpotResponse(*spotDetails))
 	return response, nil
 }
 

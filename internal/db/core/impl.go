@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	//TODO DONIA
-	mongoURI       = "mongodb://127.0.0.1:27017"
+	//TODO DONIA pass this URI as an argument
+	mongoURI       = "mongodb://172.17.0.2:27017"
 	outdoorsightDB = "outdoorsight"
 )
 

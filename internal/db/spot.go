@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/doniacld/outdoorsight/internal/spot"
+	"log"
 
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,17 +33,16 @@ func (ods *OutdoorsightDB) GetSpot(ctx context.Context, spotName string) (*spot.
 
 	// check if cursor is empty, if yes returns an empty spot.Details
 	if cursor.Next(ctx) == false {
+		log.Print("enter is cursor next is false")
 		return nil, nil
 	}
-
+	log.Printf("retrieved cursor from database '%v'", cursor)
 	// convert the result which is a cursor into a spot.Details structure
-	var spotDetails spot.Details
-	for cursor.Next(ctx) {
-		err := cursor.Decode(&spotDetails)
-		if err != nil {
-			return nil, errors.Wrap(err, "unable to decode cursor")
-		}
+	spotDetails := spot.Details{}
+	if err := cursor.Decode(&spotDetails); err != nil {
+		return nil, errors.Wrap(err, "unable to decode cursor")
 	}
+	log.Printf("retrieved spotDetails from database '%v'", &spotDetails)
 	return &spotDetails, nil
 }
 
