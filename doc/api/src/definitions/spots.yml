@@ -16,6 +16,20 @@ spot:
       type: object
       example: '{"access": "Park at the river"}'
 
+updateRequest:
+  description: UpdateSpot request
+  type: object
+  properties:
+    routes:
+      description: All the routes present in the spot
+      type: array
+      items:
+        $ref: '#/route'
+    metadata:
+      description: All the metadata related to a spot
+      type: object
+      example: '{"access": "Park at the river"}'
+
 route:
   description: Defines a route and its details
   type: object

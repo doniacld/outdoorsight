@@ -29,7 +29,7 @@ func AddSpot(ctx context.Context, request AddSpotRequest, odsDB db.DB) (AddSpotR
 	// if spotDetails is not empty it means the spot already exists in database
 	if spotDetails != nil {
 		log.Printf("retrieved spotDetails not empty %q", spotDetails)
-		return AddSpotResponse{}, errors.New(http.StatusNotFound, fmt.Sprintf("spot '%s' already exists in database", spotDetails.Name))
+		return AddSpotResponse{}, errors.New(http.StatusConflict, fmt.Sprintf("spot '%s' already exists in database", spotDetails.Name))
 	}
 	// insert spot in database
 	if _, err := odsDB.AddSpot(ctx, spotDetailsDB); err != nil {

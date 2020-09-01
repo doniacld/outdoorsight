@@ -24,15 +24,32 @@ DOCKERINSPECT=$(DOCKERCMD) inspect
 DOCKERNETWORK=$(DOCKERCMD) network
 
 # Targets
+help:
+	@echo "Compilation, image build, documentation build of Outdoorsight app"
+	@echo "--------------     User     ------------------"
+	@echo "run_outdoorsight    : Build the app, build and run the app docker image and mongo! Just launch your curl."
+	@echo "stop_outdoorsight   : Spot the docker containers and delete them"
+	@echo "test_endpoints      : Launch curls on endpoints (test/test_endpoints.sh)"
+	@echo "--------------  Developer   ------------------"
+	@echo "tidy                : Update dependencies (go mod tidy)"
+	@echo "build               : Build Outdoorsight app"
+	@echo "run                 : Run Outdoorsight app"
+	@echo "test                : Launch all units tests with the cover of each package"
+	@echo "docker_build        : Build the Outdoorsight docker image"
+	@echo "docker_run          : Run the Outdoorsight docker image"
+	@echo "docker_run_mongo    : Run the Mongo docker image"
+	@echo "render_doc          : Render the yaml api documentation into a html"
+	@echo "clean               : Remove temporary files"
+	@echo "clean_cache         : Remove the cache"
+
+# DEVELOPER
 tidy:
-	$(GOMOD) tidy
+		$(GOMOD) tidy
 build:
 		$(GOBUILD) -o $(BINARY_PATH) -v $(SOURCE_ENTRYPOINT)
 run:
 		$(GORUN) $(SOURCE_ENTRYPOINT)
 test:
-		$(GOTEST) -v ./... -cover
-test_cover:
 		$(GOTEST) -v ./... -coverprofile=coverage.txt -covermode=atomic
 clean:
 		$(GOCLEAN) $(SOURCE_ENTRYPOINT)
@@ -41,52 +58,30 @@ clean_cache:
 		$(GOCLEAN) --cache --testcache $(SOURCE_ENTRYPOINT)
 docker_build:
 		$(DOCKERBBUILD) -t outdoorsight .
-docker_run:
-		$(DOCKERRUN) --net=host outdoorsight
-docker_run_link:
-		$(DOCKERRUN) -p 8080:8080 --name outdoorsight --link=mongoDB:database outdoorsight
+docker_run: export_address_mongo
+		$(DOCKERRUN) -p 8080:8080 -e mongo_address=$(MONGO_ADDRESS) --network ods-network --name outdoorsight outdoorsight
 docker_run_mongo:
 		cd misc/mongo
-		#$(DOCKERRUN) -it --network=host --rm mongo mongo --host 127.0.0.1 test
-		$(DOCKERRUN) -d --name mongoDB mongo
+		$(DOCKERRUN) -dit -p 27017:27017 --name mongoDB --network ods-network mongo
 render_doc:
 		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml
-run_outdoorsight:
-		$(MAKE) build
-		$(MAKE) render_doc
-		$(MAKE) docker_build
-		$(MAKE) docker_run_mongo
-		$(MAKE) docker_run_link
+create_network:
+		$(DOCKERNETWORK) create ods-network
+export_address_mongo:
+		$(eval export MONGO_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongoDB))
+		@echo MONGO_ADDRESS=$(MONGO_ADDRESS)
+# USER
 stop_outdoorsight:
 		$(DOCKERSTOP) outdoorsight mongoDB
 		$(DOCKERNETWORK) rm ods-network
 		$(DOCKERRM) outdoorsight mongoDB
-
-try_run:
+run_outdoorsight:
 		$(MAKE) build
+		$(MAKE) render_doc
 		$(MAKE) docker_build
-		$(DOCKERNETWORK) create ods-network
-		$(DOCKERRUN) -dit --name mongoDB --network ods-network mongo
-		export MONGO_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongoDB)
-		$(DOCKERRUN) -d -e mongo_address=$MONGO_ADDRESS --network ods-network --name outdoorsight outdoorsight
-		export ODS_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight)
-
-
-
-help:
-	@echo "Compilation, image build, documentation build of Outdoorsight app"
-	@echo "tidy                : Update dependencies (go mod tidy)"
-	@echo "build               : Build Outdoorsight app"
-	@echo "run                 : Run Outdoorsight app"
-	@echo "test                : Launch all units tests"
-	@echo "test_cover          : Launch all units tests with the cover of each package"
-	@echo "docker_build        : Build the Outdoorsight docker image"
-	@echo "docker_run          : Run the Outdoorsight docker image"
-	@echo "docker_run_mongo    : Run the Mongo docker image"
-	@echo "run_outdoorsight    : Build the app, build and run the app docker image and mongo! Just launch your curl."
-	@echo "stop_outdoorsight   : Spot the docker containers and delete them"
-	@echo "render_doc          : Render the yaml api documentation into a html"
-	@echo "clean               : Remove temporary files"
-	@echo "clean_cache         : Remove the cache"
-
-
+		$(MAKE) create_network
+		$(MAKE) docker_run_mongo
+		$(MAKE) export_address_mongo
+		$(MAKE) docker_run
+test_endpoints:
+		test/test_endpoints.sh

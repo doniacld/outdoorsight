@@ -56,7 +56,7 @@ func (ods *OutdoorsightDB) UpdateSpot(ctx context.Context, spotName string, sd S
 	if err != nil {
 		return 0, 0, errors.Wrap(err, fmt.Sprintf("unable to update spot %s in DB", spotName))
 	}
-	log.Printf("updated spot '%s, matchecCount: '%v', '%v'", spotName, matchedCount, modifiedCount)
+	log.Printf("updated spot '%s, matchedCount: '%v', modifiedCount: '%v'", spotName, matchedCount, modifiedCount)
 
 	return matchedCount, modifiedCount, nil
 }

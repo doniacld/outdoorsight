@@ -41,6 +41,7 @@ func TestValidate(t *testing.T) {
 		"nominal case: no space":      {name: "laBagarre", expectedErr: ""},
 		"error case: one space":       {name: "la Bagarre", expectedErr: "spot name 'la Bagarre' contains at least one space"},
 		"error case: several spaces ": {name: "la Bagarre with spaces", expectedErr: "spot name 'la Bagarre with spaces' contains at least one space"},
+		"error case: empty":           {name: "", expectedErr: "spot name field is empty"},
 	}
 
 	for n, tc := range tt {
