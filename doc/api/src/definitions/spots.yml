@@ -16,7 +16,7 @@ spot:
       type: object
       example: '{"access": "Park at the river"}'
 
-updateRequest:
+updaterequest:
   description: UpdateSpot request
   type: object
   properties:
