@@ -28,7 +28,7 @@ help:
 	@echo "Compilation, image build, documentation build of Outdoorsight app"
 	@echo "--------------     User     ------------------"
 	@echo "run_outdoorsight    : Build the app, build and run the app docker image and mongo! Just launch your curl."
-	@echo "stop_outdoorsight   : Spot the docker containers and delete them"
+	@echo "stop                : Spot the docker containers, delete them and remove the network ods-network"
 	@echo "test_endpoints      : Launch curls on endpoints (test/test_endpoints.sh)"
 	@echo "--------------  Developer   ------------------"
 	@echo "tidy                : Update dependencies (go mod tidy)"
@@ -76,7 +76,7 @@ get_address_ods: docker_run
 		$(eval export ODS_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight))
 		@echo ODS_ADDRESS=$(ODS_ADDRESS)
 # USER
-stop_outdoorsight:
+stop:
 		$(DOCKERSTOP) outdoorsight mongoDB
 		$(DOCKERNETWORK) rm ods-network
 		$(DOCKERRM) outdoorsight mongoDB

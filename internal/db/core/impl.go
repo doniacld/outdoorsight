@@ -77,8 +77,8 @@ func (m *mongoDB) newClient() (*mongo.Client, error) {
 	// set client options
 	mongoAddress := os.Getenv("mongo_address")
 	mongoURI := "mongodb://" + mongoAddress + ":27017"
-	log.Print("create a connection to: ", mongoURI)
 
+	log.Print("create a connection to: ", mongoURI)
 	clientOptions := options.Client().ApplyURI(mongoURI)
 
 	// connect to mongoDB

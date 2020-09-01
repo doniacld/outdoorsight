@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -13,7 +12,7 @@ const (
 )
 
 func main() {
-	fmt.Println(asciiOutdoorsight)
+	log.Print(asciiOutdoorsight)
 	router := routers.NewRouter()
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

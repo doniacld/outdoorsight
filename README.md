@@ -43,7 +43,7 @@ It will execute the following actions :
 
 Please note if you already ran this command, launch:
 
-    make stop_outdoorsight
+    make stop
 
 > It stops and deletes the docker images `outdoorsight` and `mongoDB` but also remove the created network `ods-network`.
 
@@ -106,7 +106,7 @@ Run the app docker image
     
     make docker_run
 
-To confirm that your services can be launched together, please run `docker network inspect ods-network`.  
+To confirm that your services can communicate together, please run `docker network inspect ods-network`.  
 You should obtain something like below with `mongoDB` and `outdoorsight` containers.
 
 
@@ -246,6 +246,9 @@ The Outdoorsight project tree
 **General**
 * Have a persistent database 
 * I would like to have a user system and create a website on which everybody could register, save their spots and rock climb achievements!
+* To test the handlers part, I should create an interface `client` that holds all the endpoints methods.  
+I could create a mock and test the handlers mocking the endpoints methods.
+
 
 ## Some stuff that I learned from working on this project
 

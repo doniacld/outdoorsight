@@ -76,7 +76,7 @@ paths:
           $ref: 'definitions/errors.yml#/standard500ErrorResponse'
     put:
       summary: Update a spot
-      description: Updates a existing spot in the database. The spot could not be renamed. It replace with the given body all the details.
+      description: Update an existing spot in the database. The spot could not be renamed. It replaces with the given body all the details.
       tags:
         - Spot
       parameters:
