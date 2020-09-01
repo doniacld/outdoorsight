@@ -241,7 +241,7 @@ The Outdoorsight project tree
     3. Take the bin and HTML and run the image
 
 **UI**
-* A reflexion on UI using VueJS is in progress (currently learning VueJS)
+* A reflexion on UI using VueJS is in progress (currently learning VueJS with [this tutorial](https://www.grafikart.fr/formations/vuejs))
 
 **General**
 * Have a persistent database 

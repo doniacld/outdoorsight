@@ -34,7 +34,7 @@ help:
 	@echo "tidy                : Update dependencies (go mod tidy)"
 	@echo "build               : Build Outdoorsight app"
 	@echo "run                 : Run Outdoorsight app"
-	@echo "test                : Launch all units tests with the cover of each package"
+	@echo "unit_test           : Launch all units tests with the cover of each package"
 	@echo "docker_build        : Build the Outdoorsight docker image"
 	@echo "docker_run          : Run the Outdoorsight docker image"
 	@echo "docker_run_mongo    : Run the Mongo docker image"
@@ -51,7 +51,7 @@ build:
 		$(GOBUILD) -o $(BINARY_PATH) -v $(SOURCE_ENTRYPOINT)
 run:
 		$(GORUN) $(SOURCE_ENTRYPOINT)
-test:
+unit_test:
 		$(GOTEST) -v ./... -coverprofile=coverage.txt -covermode=atomic
 clean:
 		$(GOCLEAN) $(SOURCE_ENTRYPOINT)
