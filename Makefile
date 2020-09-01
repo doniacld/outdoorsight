@@ -41,6 +41,8 @@ help:
 	@echo "render_doc          : Render the yaml api documentation into a html"
 	@echo "clean               : Remove temporary files"
 	@echo "clean_cache         : Remove the cache"
+	@echo "get_address_mongo   : Retrieve the external IP address of mongoDB docker"
+	@echo "get_address_ods     : Retrieve the external IP address of outdoorsight docker"
 
 # DEVELOPER
 tidy:
@@ -56,7 +58,7 @@ clean:
 		rm -f $(BINARY_PATH)
 clean_cache:
 		$(GOCLEAN) --cache --testcache $(SOURCE_ENTRYPOINT)
-docker_build:
+docker_build: build
 		$(DOCKERBBUILD) -t outdoorsight .
 docker_run: export_address_mongo
 		$(DOCKERRUN) -p 8080:8080 -e mongo_address=$(MONGO_ADDRESS) --network ods-network --name outdoorsight outdoorsight
@@ -67,9 +69,12 @@ render_doc:
 		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml
 create_network:
 		$(DOCKERNETWORK) create ods-network
-export_address_mongo:
+get_address_mongo: docker_run_mongo
 		$(eval export MONGO_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongoDB))
 		@echo MONGO_ADDRESS=$(MONGO_ADDRESS)
+get_address_ods: docker_run
+		$(eval export ODS_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight))
+		@echo ODS_ADDRESS=$(ODS_ADDRESS)
 # USER
 stop_outdoorsight:
 		$(DOCKERSTOP) outdoorsight mongoDB
@@ -77,11 +82,10 @@ stop_outdoorsight:
 		$(DOCKERRM) outdoorsight mongoDB
 run_outdoorsight:
 		$(MAKE) build
-		$(MAKE) render_doc
 		$(MAKE) docker_build
 		$(MAKE) create_network
 		$(MAKE) docker_run_mongo
-		$(MAKE) export_address_mongo
+		$(MAKE) get_address_mongo
 		$(MAKE) docker_run
 test_endpoints:
 		test/test_endpoints.sh
