@@ -23,13 +23,13 @@ It is a CRUD and RESTful API, communicating through http.
 Prerequisites
 
 - [go 1.14+](https://golang.org/doc/install)
+> If you are using a previous version that Go 1.12, you might need this `export GO111MODULE=on`
 - Install [Docker](https://docs.docker.com/get-docker/)
 
 In case you want to rework the documentation:
 * [Redoc](https://github.com/Redocly/redoc)
 
 ## Users
-
 **Run the app**
 
     make run_outdoorsight 
@@ -64,7 +64,12 @@ It will execute a list of curls on the existing endpoints.
 
 **Documentation**  
 
-You can retrieve the API documentation in Redoc format through this URL:
+You can retrieve the API documentation in Redoc through getDocAPI endpoint.
+
+    $ make get_address_ods 
+    ODS_ADDRESS=192.168.64.3
+
+Execute the URL in a browser:
 
     http://$ODS_ADDRESS:8080/doc/api
 

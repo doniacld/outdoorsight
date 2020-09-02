@@ -20,7 +20,6 @@ DOCKERBBUILD=$(DOCKERCMD) build
 DOCKERRUN=$(DOCKERCMD) run
 DOCKERSTOP=$(DOCKERCMD) stop
 DOCKERRM=$(DOCKERCMD) rm
-DOCKERINSPECT=$(DOCKERCMD) inspect
 DOCKERNETWORK=$(DOCKERCMD) network
 
 # Targets
@@ -44,6 +43,22 @@ help:
 	@echo "get_address_mongo   : Retrieve the external IP address of mongoDB docker"
 	@echo "get_address_ods     : Retrieve the external IP address of outdoorsight docker"
 
+# USER
+stop:
+		$(DOCKERSTOP) outdoorsight mongoDB
+		$(DOCKERNETWORK) rm ods-network
+		$(DOCKERRM) outdoorsight mongoDB
+run_outdoorsight:
+		$(MAKE) build
+		$(MAKE) docker_build
+		$(MAKE) create_network
+		$(MAKE) docker_run_mongo
+		$(MAKE) docker_run
+test_endpoints:
+		$(eval export ODS_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight))
+		@echo ODS_ADDRESS=$(ODS_ADDRESS)
+		test/test_endpoints.sh
+
 # DEVELOPER
 tidy:
 		$(GOMOD) tidy
@@ -60,7 +75,9 @@ clean_cache:
 		$(GOCLEAN) --cache --testcache $(SOURCE_ENTRYPOINT)
 docker_build: build
 		$(DOCKERBBUILD) -t outdoorsight .
-docker_run: export_address_mongo
+docker_run:
+		$(eval export MONGO_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongoDB))
+		@echo MONGO_ADDRESS=$(MONGO_ADDRESS)
 		$(DOCKERRUN) -p 8080:8080 -e mongo_address=$(MONGO_ADDRESS) --network ods-network --name outdoorsight outdoorsight
 docker_run_mongo:
 		cd misc/mongo
@@ -69,23 +86,9 @@ render_doc:
 		redoc-cli bundle -o doc/api/index.html doc/api/src/paths.yml
 create_network:
 		$(DOCKERNETWORK) create ods-network
-get_address_mongo: docker_run_mongo
+get_address_mongo:
 		$(eval export MONGO_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mongoDB))
 		@echo MONGO_ADDRESS=$(MONGO_ADDRESS)
-get_address_ods: docker_run
+get_address_ods:
 		$(eval export ODS_ADDRESS=$(shell docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight))
 		@echo ODS_ADDRESS=$(ODS_ADDRESS)
-# USER
-stop:
-		$(DOCKERSTOP) outdoorsight mongoDB
-		$(DOCKERNETWORK) rm ods-network
-		$(DOCKERRM) outdoorsight mongoDB
-run_outdoorsight:
-		$(MAKE) build
-		$(MAKE) docker_build
-		$(MAKE) create_network
-		$(MAKE) docker_run_mongo
-		$(MAKE) get_address_mongo
-		$(MAKE) docker_run
-test_endpoints:
-		test/test_endpoints.sh

@@ -1,9 +1,11 @@
 package endpointdef
 
-// TODO DONIA might be elsewhere ?
 const (
+	// ContentType defines the content type passed in header
 	ContentType  = "Content-Type"
+	// MimeTypeJSON defines JSON mime type
 	MimeTypeJSON = "application/json"
+	// MimeTypeHTML defines HTML mime type
 	MimeTypeHTML = "text/html"
 )
 
