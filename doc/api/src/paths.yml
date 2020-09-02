@@ -26,17 +26,22 @@ paths:
       parameters:
         - in: "body"
           name: "body"
-          description: Spot's details that need to be created
+          description: Spot's details to insert in database
           schema:
             $ref: 'definitions/spots.yml#/spot'
       responses:
-        201:
-            $ref: 'definitions/spots.yml#/spot'
+        200:
+          description: The spot is created
+          content:
+            application/json:
+              schema:
+                $ref: 'definitions/spots.yml#/spot'
+        404:
+          $ref: 'definitions/errors.yml#/standard404ErrorResponse'
         409:
           $ref: 'definitions/errors.yml#/standard409ErrorResponse'
         500:
           $ref: 'definitions/errors.yml#/standard500ErrorResponse'
-
   /spots/{spotName}:
     get:
       summary: Get spot details
@@ -50,9 +55,11 @@ paths:
           name: "spotName"
       responses:
         200:
-          description: Retrieve spotDetails
-          schema:
-            $ref: 'definitions/spots.yml#/spot'
+          description: Retrieved spot
+          content:
+            application/json:
+              schema:
+                $ref: 'definitions/spots.yml#/spot'
         404:
           $ref: 'definitions/errors.yml#/standard404ErrorResponse'
         500:
@@ -92,8 +99,10 @@ paths:
       responses:
         200:
           description: The spot is updated
-          schema:
-            $ref: 'definitions/spots.yml#/spot'
+          content:
+            application/json:
+              schema:
+                $ref: 'definitions/spots.yml#/spot'
         404:
           $ref: 'definitions/errors.yml#/standard404ErrorResponse'
         409:
