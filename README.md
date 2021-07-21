@@ -231,9 +231,9 @@ The Outdoorsight project tree
 ## What's next ?
 
 **Mongo**  
-* Add a copy of session each time an endpoint is called instead of creating a new connection
+* Add a copy of session each time an endpoint is called instead of creating a newBagRule connection
 * Add indexes on spots to have a more efficient on data access
-* Create a new collection `routes` to store all the routes and develop CRUD endpoints on `route` resource
+* Create a newBagRule collection `routes` to store all the routes and develop CRUD endpoints on `route` resource
 
 **Endpoints**  
 * Implement GetSpots and AddSpots endpoints to retrieve export and imports a list of spots
