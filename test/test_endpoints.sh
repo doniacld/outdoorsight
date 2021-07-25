@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ODS_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight)
+export ODS_ADDRESS=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' outdoorsight_app_1)
 
 # Add spot
 echo -e "\e[32mAdding spot to database"

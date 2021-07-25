@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  mongodb:
+    ports:
+      - "27017:27017"
+    image: mongo
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_ADDRESS

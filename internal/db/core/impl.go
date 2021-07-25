@@ -76,7 +76,7 @@ func (m *mongoDB) Delete(ctx context.Context, collection string, filter map[stri
 // newClient creates the connection to the database and returns a mongo client
 func (m *mongoDB) newClient() (*mongo.Client, error) {
 	// set client options
-	mongoAddress := os.Getenv("mongo_address")
+	mongoAddress := os.Getenv("MONGO_ADDRESS")
 	mongoURI := "mongodb://" + mongoAddress + ":27017"
 
 	log.Print("create a connection to: ", mongoURI)
