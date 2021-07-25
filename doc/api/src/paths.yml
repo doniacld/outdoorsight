@@ -1,0 +1,111 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Outdoorsight API Doc
+  description: >
+    The Outdoorsight API Doc is a RESTful API.
+    The requests and responses are formatted according to JSON API specification.
+paths:
+  /spots:
+    get:
+      summary: List spots - NOT IMPLEMENTED YET
+      tags:
+        - Spot
+      responses:
+        200:
+          description: A list of spots
+        500:
+          description: Error 500
+          schema:
+            $ref: 'definitions/errors.yml#/standard500ErrorResponse'
+    post:
+      summary: Create a spot with its details
+      description: Adds a new spot to the database
+      tags:
+        - Spot
+      parameters:
+        - in: "body"
+          name: "body"
+          description: Spot's details to insert in database
+          schema:
+            $ref: 'definitions/spots.yml#/spot'
+      responses:
+        200:
+          description: The spot is created
+          content:
+            application/json:
+              schema:
+                $ref: 'definitions/spots.yml#/spot'
+        404:
+          $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+        409:
+          $ref: 'definitions/errors.yml#/standard409ErrorResponse'
+        500:
+          $ref: 'definitions/errors.yml#/standard500ErrorResponse'
+  /spots/{spotName}:
+    get:
+      summary: Get spot details
+      description: Retrieves details about a spot
+      tags:
+        - Spot
+      parameters:
+        - in: 'path'
+          required: true
+          type: string
+          name: "spotName"
+      responses:
+        200:
+          description: Retrieved spot
+          content:
+            application/json:
+              schema:
+                $ref: 'definitions/spots.yml#/spot'
+        404:
+          $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+        500:
+          $ref: 'definitions/errors.yml#/standard500ErrorResponse'
+    delete:
+      summary: Delete a spot
+      description: Deletes an existing spot in the database
+      tags:
+        - Spot
+      parameters:
+        - in: 'path'
+          required: true
+          type: string
+          name: "spotName"
+      responses:
+        204:
+          description: Spot is deleted
+        404:
+          $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+        500:
+          $ref: 'definitions/errors.yml#/standard500ErrorResponse'
+    put:
+      summary: Update a spot
+      description: Update an existing spot in the database. The spot could not be renamed. It replaces with the given body all the details.
+      tags:
+        - Spot
+      parameters:
+        - in: 'path'
+          required: true
+          type: string
+          name: "spotName"
+        - in: "body"
+          name: "body"
+          description: Spot's details that will replace the existent details.
+          schema:
+            $ref: 'definitions/spots.yml#/updaterequest'
+      responses:
+        200:
+          description: The spot is updated
+          content:
+            application/json:
+              schema:
+                $ref: 'definitions/spots.yml#/spot'
+        404:
+          $ref: 'definitions/errors.yml#/standard404ErrorResponse'
+        409:
+          $ref: 'definitions/errors.yml#/standard409ErrorResponse'
+        500:
+          $ref: 'definitions/errors.yml#/standard500ErrorResponse'

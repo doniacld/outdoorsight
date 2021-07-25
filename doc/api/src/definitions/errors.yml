@@ -1,0 +1,9 @@
+standard404ErrorResponse:
+  description: The path is unknown.
+
+standard409ErrorResponse:
+  description: Conflict, the resource already exists.
+
+standard500ErrorResponse:
+  description: Internal error happened.
+

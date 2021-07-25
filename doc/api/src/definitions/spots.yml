@@ -1,0 +1,52 @@
+spot:
+  description: A spot is a climbing outdoor place
+  type: object
+  properties:
+    name:
+      description: The spot's name
+      type: string
+      example: "Luceram"
+    routes:
+      description: All the routes present in the spot
+      type: array
+      items:
+        $ref: '#/route'
+    metadata:
+      description: All the metadata related to a spot
+      type: object
+      example: '{"access": "Park at the river"}'
+
+updaterequest:
+  description: UpdateSpot request
+  type: object
+  properties:
+    routes:
+      description: All the routes present in the spot
+      type: array
+      items:
+        $ref: '#/route'
+    metadata:
+      description: All the metadata related to a spot
+      type: object
+      example: '{"access": "Park at the river"}'
+
+route:
+  description: Defines a route and its details
+  type: object
+  properties:
+    name:
+      description: The route's name
+      type: string
+      example: "Aline"
+    level:
+      description: The level difficulty of the route
+      type: string
+      example: "6a+"
+    points:
+      description: The number of points to get to the top
+      type: number
+      example: 6
+    information:
+      description: Free field to add any detail you want to
+      type: string
+      example: "The second move is pretty tricky."

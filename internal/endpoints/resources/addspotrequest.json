@@ -1,0 +1,14 @@
+{
+  "name": "coucou",
+  "routes": [
+    {
+      "name": "IAMTHEONE",
+      "level": "5a",
+      "points": 5,
+      "information": "ishouldbeanesayone"
+    }
+  ],
+  "metadata": {
+    "info": "go to the river"
+  }
+}
